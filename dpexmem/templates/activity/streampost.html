@@ -1,0 +1,49 @@
+{% if activity.object.group.name %}
+<button class="button is-link is-light">
+    <i class="fas fa-reply fa-flip-horizontal mr-1 mt-1"></i>
+    {{activity.object.group.name}}
+</button>
+{% endif %}
+<div class="box post-box">
+    <div class="content">
+        <div class="level is-mobile mb-1">
+            <div class="level-left">
+                <h3 class="title">{{activity.object.title}}</h3>
+            </div>
+            {% if user == activity.object.author %}
+            <div class="level-right">
+                <div class="dropdown is-right">
+                    <span class="icon dropdown-trigger" title="Options">
+                        <i class="fas fa-ellipsis-v has-text-grey dropdown-trigger"></i>
+                    </span>
+                    <div class="dropdown-menu disable-select" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content" data-uuid="{{activity.object.uuid}}">
+                            <a class="dropdown-item openModal has-text-weight-bold text-right">
+                                Edit
+                            </a>
+                            <a class="dropdown-item deleteModal has-text-weight-bold has-text-danger text-right" data-uuid>
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <p class="subtitle">{{activity.object.content}}</p>
+        <hr class="mb-1">
+        <div class="level is-mobile">
+            <div class="level-left">
+                <span class="has-text-grey">by {{activity.actor}}</span>
+            </div>
+            <div class="level-right">
+                <time class="has-text-grey">
+                    {{activity.object.created_at|time:"H:i"}}
+                    {{activity.object.created_at|date:"j M"}}
+                </time>
+            </div>
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% load url_tags %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.25),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/press.jpg" %}');
+}
+.embed-responsive {
+    height: 750px !important;
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+        <div class="container">
+            <div class="row mt-4">
+    <div class="col-md-12 text-center">
+            <div class="getsocial gs-inline-group"></div>
+    </div>
+</div>
+<hr>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"  src="/static/ViewerJS/index.html#{{ page.pdf.url }}" allowfullscreen webkitallowfullscreen height="600"></iframe>
+
+                    </div>
+                </div>
+                
+            </div>
+      </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

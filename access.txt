@@ -1,0 +1,1 @@
+gcloud beta compute --project "dpex-centre" ssh --zone "asia-southeast1-b" "dpexmem"

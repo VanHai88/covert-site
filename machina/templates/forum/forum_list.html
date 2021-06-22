@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load mptt_tags %}
+{% load forum_tags %}
+{% load forum_conversation_tags %}
+{% load forum_member_tags %}
+{% load forum_tracking_tags %}
+
+
+{% if root_level == 0 %}
+<div class="row">
+    {% recurseforumcontents forum_contents %}
+    {% if node.level == root_level %}
+    <div class="col-md-6 mb-3">
+        <a href="{% url 'forum:forum' node.obj.slug node.obj.uuid %}" class="forum-name-link">
+        <div class="card">
+
+            <div class="row">
+                <div class="col-5 pr-0">
+                    <div class="imgDiv" style="background-image: url('{% if node.obj.image %}{{ node.obj.image.url }}{% endif %}'); border-radius: 0 0 0 15px;"></div>
+                </div>
+                <div class="col-7 pl-0">
+                    <div class="card-body">
+                        <h5 class="forumTitle">{{ node.obj.name }}</h5>
+                        <div class="forumDiv">{{ node.obj.description.rendered }}</div>
+                        <small>{{ node.obj.num_topics }} conversations</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    {% endif %}
+    {% endrecurseforumcontents %}
+</div>
+{% elif root_level == 1 %}
+<div class="row">
+    <div class="col-md-12">
+        {% recurseforumcontents forum_contents %}
+        {% if node.level == root_level %}
+            <span class="badge badge-light ftag" id="ft-{{ node.obj.uuid }}" data-tag="{{ node.obj.uuid }}">{{ node.obj.name }}</span>
+        {% endif %}
+        {% endrecurseforumcontents %}
+    </div>
+</div>
+{% endif %}
+

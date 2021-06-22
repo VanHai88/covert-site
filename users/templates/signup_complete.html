@@ -1,0 +1,48 @@
+{% extends "login_base.html" %}
+{% load staticfiles %}
+
+{% load i18n %}
+
+{% block ltitle %}Signup Successful{% endblock ltitle %}
+
+{% block page_css %}
+.signupDiv {
+    background: linear-gradient( to right,
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0.35)
+        ), url("{% static 'images/complete.jpeg' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 400px;
+    padding: 25px;
+    color: white;
+
+}
+
+.signupDiv p {
+    color: white;
+}
+
+
+{% endblock page_css %}
+
+{% block econtent %}
+<div class="signupDiv">
+    <div class="row vcenter">
+        <div class="col-md-6 ">
+            {% if next != '/' %}
+                <h2>for our {{ action }}!</h2>
+                <p class="mt-4 ">We'll also like to warmly welcome you as a member of the <strong>DPEX Community</strong> where you can access data protection resouces and discussions on pertinent topics.</p>
+            {% else %}
+            <h2 class="mb-4">Just one more step!</h2>
+            <p class="mt-4">Thank you for registering as a DPEX Network member.</p>
+            <p>To confirm your membership, please click on the link in the email we have just sent to you. Please check your inbox or spam in the next 5 - 10 minutes if you have not received it.</p>
+            <p>Click the button below to be redirected to your last page.</p>
+            <a href='{{ next }}' class="btn btn-primary btn-long">Go Back&nbsp;&nbsp;<i class="fa fa-undo-alt"></i></a>    
+            {% endif %}
+        </div>
+    </div>
+
+</div>    
+{% endblock %}

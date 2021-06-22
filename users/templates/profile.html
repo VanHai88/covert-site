@@ -1,0 +1,114 @@
+{% extends "login_base.html" %}
+
+{% load static %}
+{% load i18n wagtailcore_tags %}
+{% load crispy_forms_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.4), 
+          rgba(0, 0, 0, 0.4)
+        ), url('{% static "images/account.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+#hint_id_new_password1 li {
+    font-size: 12px;
+}
+
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{% trans "Profile / Settings" %}</h1>
+{% endblock jtron %}
+
+{% block econtent %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs mt-3 nav-fill" id="userSetting" role="tablist">
+                    <li class="nav-item ">
+                        <a class="nav-link active btn-block" id="accountSettingBtn" data-toggle="tab" href="#accountSetting" role="tab" aria-controls="accountSetting" aria-selected="true">Account Setting</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-block" id="securitySettingBtn" data-toggle="tab" href="#securitySetting" role="tab" aria-controls="securitySetting" aria-selected="false">Security Setting</a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-4" id="userSettingTab">
+                    <div class="tab-pane fade active show" id="accountSetting" role="tabpanel" aria-labelledby="account-setting-tab">
+                        <div id="accountSettingContent">
+                        {% crispy updateForm %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade"  id="securitySetting" role="tabpanel" aria-labelledby="Security-setting-tab">
+                        <div id="securitySettingContent">
+                        {% crispy passwordChangeForm %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock econtent %}
+
+{% block extra_js %}
+<script>
+        $("body").on('submit', '#securitySettingForm', function(e){
+            e.preventDefault()
+            $('#securitySettingForm button').attr('disabled', true);
+            $.ajax({
+                url: "{% url 'user-profile' %}",
+                type: "POST",
+                data: $("#securitySettingForm").serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        toastr.info('Your password was successfully updated!');
+                        setTimeout(function(){location.reload();}, 2000);
+                    } else {
+                        $('#securitySettingForm').html(data.form_html);
+                    }
+
+                },
+                complete: function(){
+                    $('#securitySettingForm button').attr('disabled', false);
+                }
+            });
+        });
+
+        $("body").on('click', '#updateDetail .update-detail', function(){
+            $('#updateDetail .update-detail').attr('disabled', true);
+            $.ajax({
+                url: "{% url 'user-profile' %}",
+                type: "POST",
+                data: $("#updateDetail").serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        toastr.info('Your details was successfully updated!');
+                        setTimeout(function(){location.reload();}, 2000);
+                    } else {
+                        $('#updateDetail').html(data.form_html);
+                        $('#updateDetail .form-group').addClass('row');
+                    }
+
+                },
+                complete: function(){
+
+                    $('#updateDetail .update-detail').attr('disabled', false);
+                }
+            });
+        });
+        </script>
+{% endblock extra_js %}
+

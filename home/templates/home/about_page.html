@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75), 
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+.aprofImg {
+    border-radius: 50%;
+    width: 100px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.straitsLogo {
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>About Us</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>
+                    About the Data Protection Excellence (DPEX) Network
+                </h1>
+
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <p>
+                    The Data Protection Excellence (DPEX) Network is the first of its kind facility in the ASEAN region whose aim is to provide leadership, best practices, training, research and support for all things surrounding data privacy from an operational perspective. 
+                </p>
+                <p>This collaboration of partnerships comprise certification bodies, law firms, universities and organisations who provide professional services and technologies relating to data privacy.
+                </p>
+                <p>An ever-growing network of certification and learning bodies, members currently include Straits Interactive, De La Salle University, Philippines, International Islamic University of Malaysia, National Institute of Development Administration - NIDA, Thailand, Singapore Management University Academy and Telkom University, Indonesia, IAPP, EXIN and OCEG. </p>
+                <p class="mt-5">The DPEX Network is honoured to have the following Independent International Advisors on the panel, who volunteer their services to guide the community in their competency and compliance journey in the region.</p>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            {% for adv in advisors %}
+            <div class="col-md-6 mt-4">
+                <div class="media">
+                    <img class="mr-3 aprofImg" src="{{ adv.image.url }}" >
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ adv.name }}</h5>
+                        <p>{{ adv.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <h1>
+                    About Straits Interactive
+                </h1>
+            
+                <img class='mt-4 mb-4 straitsLogo' src="{% static 'images/straits.jpg' %}" alt="">
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-5">
+            <div class="col-md-12">
+                <p>Straits Interactive co-leads the DPEX Community.</p>
+                <p>The company delivers end-to-end governance, risk and compliance solutions that enable trusted business and responsible marketing, especially in the area of data privacy and protection. </p> 
+                <p>Recently Data Protection Trustmark (DPTM) certified, we help businesses achieve operational compliance and manage risks through a combination of cloud technology and professional services.</p>  <p>Our quest for innovation has led to us being recognised and awarded Intercon’s Top 50 Tech Companies (in recognition of the company’s contribution to technology) and APAC Business Headlines’ Company of the Year, 2019. </p><p>Our software-as-a-service solutions include DPOinBox and Governance, Risk & Compliance System (GRACIAs), all of which are supported by professional services that include advisory services, audits, and training.</p> <p>More information about the company can be found on <a href="https://www.straitsinteractive.com">www.straitsinteractive.com</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

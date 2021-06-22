@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load forum_conversation_tags %}
+{% load forum_member_tags %}
+{% load forum_tracking_tags %}
+
+{% if topics or not hide_if_empty %}
+
+<div class="card mt-2 mb-4">
+    <div class="card-header bg-dark">
+        <i class="fa fa-megaphone"></i>&nbsp;&nbsp;Announcements
+    </div>
+    <div class="card-body">
+        {% for topic in topics %}
+        <a href="{% url 'forum_conversation:topic' topic.forum.slug topic.forum.pk topic.slug topic.pk %}" class="topic-name-link">{{ topic.subject }}</a>
+                {% if topic.is_locked %}&nbsp;<i class="fas fa-times-circle locked-indicator" title="{% trans 'This topic is locked' %}"></i>{% endif %}
+                {% if topic.poster %}
+                  {% url 'forum_member:profile' topic.poster_id as poster_url %}
+                  {% blocktrans trimmed with poster_url=poster_url username=topic.poster|forum_member_display_name creation_date=topic.created %}
+                  <p>By: <a href="{{ poster_url }}">{{ username }}</a> on {{ creation_date }}</p>
+                  {% endblocktrans %}
+                  {% else %}
+                  {% blocktrans trimmed with poster_username=topic.first_post.get_full_name creation_date=topic.created %}
+                  <p>By: {{ poster_username }} on {{ creation_date }}</p>
+                  {% endblocktrans %}
+                  {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

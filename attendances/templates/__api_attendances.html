@@ -1,0 +1,50 @@
+{% load i18n %}
+
+{% if items %}
+{% for item in items %}
+<div class="row">
+    <div class="col-12">
+        <div class="course-item-one">
+            <div class="image-box">
+                <figure>
+                    <img src="{{ item.courses.banner }}" alt="">
+                </figure>
+                <div class="overlay">
+                    <a class="link-btn" href="{{ item.courses.url }}">
+                        <i class="fa fa-link"></i>
+                    </a>                                
+                </div>
+            </div>
+            <div class="image-text">
+                <h6><a href="courses-single.html">{{ item.courses.title }}</a></h6>
+                <div class="course-info clearfix">
+                    <ul class="float-left">
+                        <li><i class="fa fa-calendar" aria-hidden="true"></i>Finished at date: {{ item.date }}</li>
+                    </ul>
+                </div>
+                <div class="courses-bottom clearfix">
+                    <div class="link-btn float-left">
+                        <a href="{{ item.courses.url }}" class="thm-btn bg-clr1">Join Now</a>
+                    </div>
+                    <div class="courses-info float-right clearfix">
+                        <figure>
+                            <div class="course-left float-left mt-3">
+                                <img style="max-width:150px" src="{{ item.courses.badge }}">
+                            </div>
+                        </figure>
+                    </div>
+                </div>                                
+            </div>
+                    </div>
+    </div>
+</div>
+{% endfor %}
+
+{{ pagination }}
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>No topics found</h4>        
+    </div>
+</div>
+{% endif %}

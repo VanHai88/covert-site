@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75), 
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+.aprofImg {
+    border-radius: 50%;
+    width: 100px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.straitsLogo {
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>Contact Us</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 " id="blogDiv">
+                <h4 class="text-center mb-4">Have a question? Write to us!</h4>
+
+                {% include "messages.html" %}
+
+                <form action="" method="POST">
+                {% csrf_token %}
+                    <input type="hidden" name="honeypot">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <label for="">Name</label>
+                        <input class="form-control" type="text" name="name" placeholder="Enter your name..." required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="">Email</label>
+                        <input class="form-control" type="email" name="email" placeholder="Enter your email..." required>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+            
+                    <div class="col-md-12">
+                        <p class="mb-2">My query is about</p>
+                        <div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" name="enquiry" value="Professional Certification" class="custom-control-input" id="cc1">
+                            <label class="custom-control-label" for="cc1">Professional Certification</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" name="enquiry" value="Local In-Country Training" class="custom-control-input" id="cc2">
+                            <label class="custom-control-label" for="cc2">Local In-Country Training</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" name="enquiry" value="Software & Tools" class="custom-control-input" id="cc3">
+                            <label class="custom-control-label" for="cc3">Software & Tools</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" name="enquiry" value="Local Data Protection Service Provider" class="custom-control-input" id="cc4"><label class="custom-control-label" for="cc4">Local Data Protection Service Provider</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" name="enquiry" value="Other" class="custom-control-input" id="cc4"><label class="custom-control-label" for="cc4">Other</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <label for="">Remarks</label>
+                        <textarea class="form-control" name="remarks" id="" cols="30" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="h-captcha mt-4" data-sitekey="7e5da4db-a8ff-45f0-b08b-c17325e576e1"></div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                    <button class="btn btn-primary btn-long">Submit</button>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                    <p>Please complete the fields below, and kindly ensure that your information is accurate so we can reply to your enquiry for the purposes of assisting and following up with you on your enquiry set out in the form. You may refer to our <a href="https://www.dpexnetwork.org/privacy-policy/">Data Protection Notice</a> for more details. Thank you.</p>
+                    </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+{% endblock extra_js %}

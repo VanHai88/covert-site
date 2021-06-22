@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'forum:index' %}"><i class="icon fas fa-home"></i>&nbsp;Discussions</a></li>
+    {% if forum.level == 1 %}
+            <li class="breadcrumb-item"><a href="{% url 'forum:forum' forum.parent.slug forum.parent.uuid %}">{{ forum.parent.name }}</a></li>
+            {% elif forum.level == 0 %}
+            <li class="breadcrumb-item"><a href="{% url 'forum:forum' forum.slug forum.uuid %}">{{ forum.name }}</a></li>
+            {% endif %}
+            {% if topic %}
+            <li class="breadcrumb-item"><a href="{% url 'forum_conversation:topic' forum.slug forum.id topic.slug topic.uuid %}">{{ topic.subject }}</a></li>
+            {% endif %}
+  </ol>
+</nav>

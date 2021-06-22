@@ -1,0 +1,65 @@
+{% load staticfiles %}
+{% if not request.user.is_authenticated %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h5 class="mt-2 mb-2">
+            Become a <strong>DPEX Community</strong> member to access</br> data protection resouces and discussions on pertinent topics now.
+        </h5>    
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6  mt-4">
+        <div class="media">
+            <img src="{% static 'images/icons/learning_o.png' %}" class="mr-3" alt="" style="width:50px"/>
+            <div class="media-body vcenter">
+                <p>Access online / in-person courses and view past training records</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 mt-4">
+        <div class="media">
+            <img src="{% static 'images/icons/forum_o.png' %}" class="mr-3" alt="" style="width:50px"/>
+            <div class="media-body vcenter">
+                <p>Join lively discussions on pertinent data protection topics</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 mt-4">
+        <div class="media">
+            <img src="{% static 'images/icons/resources_o.png' %}" class="mr-3" alt="" style="width:50px"/>
+            <div class="media-body vcenter">
+                <p>Gain access to data protection research and video resources</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 mt-4">
+        <div class="media">
+            <img src="{% static 'images/icons/regulations_o.png' %}" class="mr-3" alt="" style="width:50px"/>
+            <div class="media-body vcenter">
+                <p>Receive value-added data protection updates from the region</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <button data-toggle="modal" data-target="#loginModal" class="btn btn-primary btn-long joinBtn">Sign up for a free membership&nbsp;&nbsp;<i class="fa fa-users"></i></button>
+    </div>
+</div>
+<hr>
+{% else %}
+{% if not request.user.is_active %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h5 class="mt-2 mb-2 text-center">
+            Just one more step! We've sent an email to <strong>{{ request.user.email }}</strong>. </br>Please check your inbox or spam and open it to activate your account.
+        </h5>
+        
+    </div>
+</div>
+<hr>    
+{% endif %}
+
+{% endif %}
+<div id="coral_thread"></div>

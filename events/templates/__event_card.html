@@ -1,0 +1,34 @@
+<a href="{{ event.url }}">
+        <div class="card mb-3">
+
+            <div class="eventCard two">
+                <div class="date-mark">
+                                        <div class="date-mark-text">
+                                            <p>{{ event.pdate.1 }}</p>
+                                            <p>{{ event.pdate.2 }}</p>
+                                        </div>
+                                    </div>
+
+                <img class="card-img-top" src="{{ event.banner }}" alt="Card image cap">
+
+                <div class="card-body">
+
+                <h6>{{ event.title }}</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;{{ event.address|default:'Webinar' }}</li>
+                    <li class="mt-2"><i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>&nbsp;&nbsp;{{ event.pdate.3 }}</li>
+                </ul>
+                <div class="event-text">{{ event.body|safe|truncatechars_html:200 }}</div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <button class='btn btn-primary btn-long' href="">Register</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        </a>

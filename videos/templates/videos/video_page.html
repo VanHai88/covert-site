@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.plyr.io/3.5.10/plyr.css" />
+
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.4)
+        ), url('{% static "images/videos.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>{{ self.title }}</h1>
+{% endblock jtron %}
+
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                         <div class="plyr__video-embed" id="player">
+                                            <iframe src="{{ page.url_address}}" style="width: 100%; min-height: 450px;" frameborder="0" allowfullscreen>
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                            <div class="getsocial gs-inline-group"></div>
+                        </div>
+                    </div>
+                    
+                                {% if not request.user.is_authenticated %}
+                                <div class="row text-center mt-4">
+                                    <div class="col-md-12">
+                                        <p class="mt-2 mb-0 otext">Video playback is limited to 45s for non-members</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2 vcenter">
+                                <div class="row">
+                                    {% for vid in videos %}
+                                    <div class="mt-2 col-6 col-md-12">
+                                        <a href="{{ vid.get_url }}">
+                                        <img src="{{ vid.get_banner }}" alt="" style="width:100%"></a>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% include "coral_div.html" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+
+    </div>
+</section>
+
+  
+
+    
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.plyr.io/3.5.10/plyr.polyfilled.js"></script>
+{% if not request.is_preview %}
+{% include "coral.html" with obj=self ident="VID" %}
+{% else %}
+Preview mode no comments
+{% endif %}
+<script>
+$(document).ready(function(){
+    //document.addEventListener('contextmenu', function(e) {
+    //  e.preventDefault();
+    //});
+
+    const player = new Plyr('#player');
+
+    {% if not request.user.is_authenticated %}
+    var paused = true
+    var countdown = setInterval(lock_play, 1000);
+
+    sec_played = 45
+
+    player.on('playing', event => {
+        paused = false;
+    });
+
+    player.on('pause', event => {
+        paused = true;
+    });
+
+    function lock_play(){
+        if(!paused) {
+            console.log(sec_played)
+            if (sec_played == 0) {
+                player.stop()
+                paused = true;
+                toastr.info('Preview ended! Sign up or Login to watch the rest of the video.');
+                sec_played = 45
+                console.log('reset')
+            } else {
+                sec_played--;
+            }
+        }
+    }
+
+    {% endif %}
+});
+</script>
+{% endblock extra_js %}

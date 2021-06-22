@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load wagtailcore_tags %}
+
+{% if videos %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h5></h5>
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    {% for video in videos %}
+                    <div class="swiper-slide">
+                        <a href="{{ video.url }}">
+                        <img src="{{ video.banner }}" alt="">
+                        </a>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
+            </div>
+
+
+        </div>
+        
+    </div>
+{% else %}
+
+{% endif %}

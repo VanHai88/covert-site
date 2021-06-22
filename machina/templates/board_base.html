@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load forum_permission_tags %}
+
+{% block title %}{{ MACHINA_FORUM_NAME|default:"Forum" }} &mdash; {% block sub_title %}{% endblock sub_title %}{% endblock title %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.65)), url('{% static "images/discussion.jpg" %}');
+    background-position: center top !important;
+    
+}
+
+.card-body p {
+    margin-bottom: 0;
+}
+</style>   
+{% block forum_css %} 
+{% endblock forum_css %}
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<div class="row">
+    <div class="col-md-9 text-left">
+        <h1>
+            {% if forum %}
+                {% if 'create' in request.path %}
+                    New Topic 
+                {% endif %}
+
+                {% if '/update/' in request.path %}
+                    Update Topic 
+                {% endif %}
+                
+                {% if '/topic/' not in request.path %}
+                {{ forum.name }}                
+                {% endif %}
+                
+                {% else %}
+                
+                Discussions{% endif %}
+                
+                {% if topic %}
+                {{ topic }}
+
+                {% endif %}
+        </h1>
+    </div>
+    <div class="col-md-3 text-right">
+        {% block jtron_btn %}
+        {% if forum and not request.user.is_anonymous and '/topic/' not in request.path and request.user.is_active %}
+        <a class="btn btn-primary btn-long" href="{% url 'forum_conversation:topic_create' forum.slug forum.uuid %}" class="btn btn-primary btn-sm"><i class="fa fa-comments"></i>&nbsp;&nbsp;{% trans "New topic" %}</a>
+        {% endif %}
+        {% endblock jtron_btn %}
+    </div>
+    
+</div>
+
+{% endblock jtron %}
+
+
+
+{% block content %}
+<section class="mt-4 mb-5" id="forumSect">
+    <div class="container">
+        <!--
+        <div class="row">
+            <div class="col-md-12">
+                {% block breadcrumb %}{% include "partials/breadcrumb.html" %}{% endblock breadcrumb %}
+            </div>
+        </div>-->
+        
+        {% if messages.html %}
+        <div class="row">
+            <div class="col-md-12">
+            {% block messages %}{% include "partials/messages.html" %}{% endblock messages %}
+            </div>
+        </div>
+        {% endif %}
+        {% block forum_cont %}
+        {% endblock forum_cont %}
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function() {
+    {% block onbodyload %}{% endblock onbodyload %}
+  });
+</script>
+{% endblock extra_js %}

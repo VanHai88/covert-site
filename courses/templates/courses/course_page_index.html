@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.55)
+        ), url('{% static "images/courses.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>Courses in the Region</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5" id="courseSect">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <div class="fact-single-item two text-center">
+                    <i class="fal fa-university"></i>
+                    <h4>Foundation</h4>
+                    <p>Courses to give you a basic understanding of data privacy</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fact-single-item two text-center">
+                    <i class="fal fa-layer-plus"></i>
+                    <h4>Advanced</h4>
+                    <p>Courses to deepen your understanding of data privacy</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fact-single-item two text-center">
+                    <i class="fal fa-globe"></i>
+                    <h4>International</h4>
+                    <p>Courses to give you exposure to international regulations</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fact-single-item two text-center">
+                    <i class="fal fa-user-chart"></i>
+                    <h4>Enhanced</h4>
+                    <p>Courses to broaden your privacy knowledge</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <h3>Learn about our Data Protection Competency Roadmap</h3>
+
+                <a href="/data-protection-competency-roadmap/" class="mt-2 btn btn-lg btn-primary"><i class="fa fa-books"></i>&nbsp;&nbsp;View Roadmap</a>
+            </div>
+            
+        </div>
+
+        <hr class="mb-2">
+        <form id="courseForm">
+        <div class="row">
+            <div class="col-md-3 mt-2">
+                <select name="cert" id="" class="form-control courseSel">
+                    <option value="">All Courses</option>
+                    {% for x in tags_dict.levels %}
+                        <option value="{{ x.id }}">{{ x.text}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 mt-2">
+                <select name="location" id="" class="form-control courseSel">
+                    <option value="">All Locations</option>
+                    <option value="HK">Hong Kong</option>
+                    <option value="IN">India</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="PH">Philippines</option>
+                    <option value="SG">Singapore</option>
+                    <option value="TH">Thailand</option>
+                    
+                    <option value="ON">Online</option>
+                </select>
+            </div>
+            <div class="col-md-3 offset-md-3 mt-2">
+                <div class="input-group">
+                        <input id="courseSearch" type="text" name="search" class="form-control" value="" placeholder="Search courses">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                        </div>
+                </div>
+            </div>
+            
+        </div>
+        </form>
+        <hr>
+        <div id="courseDiv">
+            
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var load_courses = function() {
+        $.ajax({
+            url: "/api/courses/?format=html",
+            type: "GET",
+            data: $('#courseForm').serialize(),
+            success: function(data) {
+                $('#courseDiv').html(data)
+            }
+        });
+    }
+
+    function setWithExpiry(key, value, ttl) {
+        const now = new Date()
+
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+    }
+
+    function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+            // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null
+        }
+
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+            // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            localStorage.removeItem(key)
+            return null
+        }
+
+        return item.value
+    }
+
+
+    var timer = null;
+
+    $('#courseSearch').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            setWithExpiry('courseSearch', $('#courseSearch').val(), 3600000);
+            load_courses();
+       }, 500)
+    });
+
+    $('.courseSel').on('change', function(){
+        setWithExpiry('course' + $(this).prop('name'), $(this).val(), 3600000);
+        load_courses();
+    });
+
+    $('select[name="cert"]').val(getWithExpiry('coursecert'));
+    $('select[name="location"]').val(getWithExpiry('courselocation'));
+    $('#courseSearch').val(getWithExpiry('courseSearch'))
+    $('select[name="cert"]').trigger('change');
+})
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,48 @@
+{% load i18n %}
+
+{% if items %}
+{% for item in items %}
+
+<div class="row mb-5">
+    <div class="col-12">
+
+        <a href="{{ item.url_address }}">
+        <div class="card">
+
+            <div class="row">
+                <div class="col-3 pr-0">
+                    <div class="imgDiv" style="background-image: url('{{ item.banner }}')"></div>
+                </div>
+                <div class="col-9 pl-0">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5 class="">{{ item.title }}</h5>
+                            </div>
+                            <div class="col-4 text-right">
+                                <strong>{{ item.type }}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="forumDiv">{{ item.description|safe }}</div>
+                        
+                        <button class="btn btn-sm btn-primary btn-long mt-3" href="">Visit Site</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+
+
+    </div>
+</div>
+{% endfor %}
+
+{{ pagination }}
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>No Tools or Websites</h4>        
+    </div>
+</div>
+{% endif %}

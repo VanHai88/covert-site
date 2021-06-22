@@ -1,0 +1,68 @@
+{% extends 'board_base.html' %}
+{% load i18n %}
+{% load forum_conversation_tags %}
+{% load forum_member_tags %}
+{% load forum_permission_tags %}
+
+{% block sub_title %}{{ topic.subject }}{% endblock sub_title %}
+
+
+{% block jtron_btn %}
+{% if topic.poster == request.user %}
+<a class="btn btn-primary btn-long" href="{% url 'forum_conversation:topic_update' topic.forum.slug topic.forum.uuid topic.slug topic.uuid %}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Topic</a>
+{% endif %}
+{% endblock jtron_btn %}
+
+
+{% block forum_cont %}
+
+<div class="row mb-4">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small class="font-italic">{{ topic.created|date:"j M, Y" }}</small>
+                        <h5>{{ topic.subject }}</h5>
+                        <div class="mt-4">
+                        {{ topic.first_post.content|safe }}                        
+                        </div>
+                                                <div class="mt-4">
+                        {% for item in topic.tags.all %}
+                            <span class="badge badge-light">{{ item }}</span>
+                        {% endfor %}    
+                        </div>
+
+                        <div class="event-item-one mt-2">
+                            <ul class="list-unstyled list-inline pl-0">
+                                <li class="list-inline-item"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;&nbsp;{{ topic.views_count }}</li>
+                                <li class="list-inline-item pr-2"><i class="fa fa-comment-alt-lines" aria-hidden="true"></i>&nbsp;&nbsp;<span  class="coral-count" data-coral-notext="true" data-coral-id="DIS-{{ topic.uuid }}">0</span></li>
+                                <li class="list-inline-item pr-2"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;{% if topic.poster %}{% url 'forum_member:profile' topic.poster_id as poster_url %}<a class="ml-10" href="{{ poster_url }}">{{ topic.poster.get_full_name }}</a>{% else %}{{ topic.first_post.get_full_name }}{% endif %}</li>
+                       
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mt-4">
+    <div class="col-md-12 text-center">
+            <div class="getsocial gs-inline-group"></div>
+    </div>
+</div>
+<hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ test }}
+                        {% include "coral_div.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock forum_cont %}
+
+{% block extra_js %}
+{% include "coral.html" with obj=topic ident="DIS" %}
+{% endblock extra_js %}

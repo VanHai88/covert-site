@@ -1,0 +1,47 @@
+{% load i18n %}
+{% load forum_conversation_tags %}
+{% load forum_member_tags %}
+{% load forum_tracking_tags %}
+
+{% if topics %}
+
+{% for topic in topics %}
+<a href="{% url 'forum_conversation:topic' topic.forum.slug topic.forum.uuid topic.slug topic.uuid %}">
+<div class="card mb-3">
+    <div class="card-body">
+        <small class="font-italic">{{ topic.date }}</small>
+        <h5>{{ topic.subject }}</h5>
+                        
+        {{ topic.first_post.content|safe }}
+        {% if topic.tags %}
+        <div class="mt-4">
+        {% for item in topic.tags %}
+            <span class="badge badge-light">{{ item.name }}</span>
+        {% endfor %}
+        </div>
+        {% endif %}                    
+
+        <div class="event-item-one mt-2">
+            <ul class="list-unstyled list-inline pl-0">
+                <li class="list-inline-item"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;&nbsp;{{ topic.views_count }}</li>
+                <li class="list-inline-item pl-2"><i class="fa fa-comment-alt-lines" aria-hidden="true"></i>&nbsp;&nbsp;<span  class="coral-count" data-coral-notext="true" data-coral-id="DIS-{{ topic.uuid }}">0</span></li>
+                <li class="list-inline-item pl-2"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;{% if topic.poster %}{% url 'forum_member:profile' topic.poster_id as poster_url %}<a class="ml-10" href="{{ poster_url }}">{{ topic.poster.first_name }} {{ topic.poster.last_name }}</a>{% else %}{{ topic.first_post.first_name }} {{ topic.poster.last_name }}{% endif %}</li>
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+</a>
+
+{% endfor %}
+
+
+{{ pagination }}
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>No topics found</h4>        
+    </div>
+</div>
+{% endif %}

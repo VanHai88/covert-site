@@ -1,0 +1,16 @@
+{% extends "login_base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block ltitle %}Activation Invalid{% endblock ltitle %}
+
+{% block econtent %}
+
+<div class="text-center">
+    <h5>The confirmation link was invalid, possibly because it has already been used.</h5>
+</div>
+{% endblock %}
+

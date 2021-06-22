@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+{% block page_title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="columns">
+    <div class="column m-auto is-full-mobile is-two-thirds-tablet is-half-desktop">
+        <div class="card">
+            <div class="card-content">
+                <div class="level">
+                    <p class="subtitle">
+                        Already have an account? <a href="{% url 'login' %}">Log In</a>
+                    </p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="button" type="submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

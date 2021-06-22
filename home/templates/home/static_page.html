@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75), 
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+
+
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2" id="blogDiv">
+                {{ page.body|safe }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

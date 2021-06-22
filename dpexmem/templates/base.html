@@ -1,0 +1,452 @@
+{% load staticfiles %}
+{% load compress %}
+{% load crispy_forms_tags %}
+{% load static wagtailuserbar %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K957M6R');</script>
+<!-- End Google Tag Manager -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-52657705-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+<!-- Google Analytics -->
+  gtag('config', 'UA-52657705-3');
+<!-- Google Ads -->
+  gtag('config', 'AW-968586759');
+</script>
+
+
+    <meta charset="UTF-8" />
+    <meta name="description" content="{{ self.search_description|default:'' }}" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://kit.fontawesome.com/bab8e6af79.js" crossorigin="anonymous"></script>
+    <!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '960717520769248');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=960717520769248&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+
+    <title>
+        {% block title %}
+        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+        {% endblock %}
+        {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+        {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+        {% endblock %}
+    </title>
+{#     Go to www.addthis.com/dashboard to customize your tools #}
+    <script>(function() {var po = document.createElement("script"); po.type = "text/javascript"; po.async = true; po.src = "https://api.at.getsocial.io/get/v1/32ab171a/gs_async.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s); })();</script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+{#   Custom CSS #}
+
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/custom.min.css' %}" type="text/css" />
+{#   Media CSS #}
+    <link rel="stylesheet" href="{% static 'css/media.min.css' %}" type="text/css" />
+    {% endcompress css %}
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png">
+    <link rel="icon" href="{% static 'favicon/favicon.ico' %}" type="image/x-icon" />
+    {% block extra_css %}
+        
+    {% endblock extra_css %}
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K957M6R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% wagtailuserbar 'bottom-left' %}
+{#   Mobile Hamburger Menu and Navigation Menu Section Starts #}
+    <div class="hamburger-menu">
+        <div class="burger-menu">
+            <span></span>
+        </div>
+    </div>
+{#   Mobile Hamburger Menu and Navigation Menu Section Ends #}
+{#   Sidebar Section Starts #}
+    <header class="fixed-sidebar">
+        <div class="sidebar-menu">
+            <ul class="mob-menu-listing">
+                <li class="active"><a href="#">Home</a></li>
+                <li >
+                    <a href="#">Learn <i class="fas fa-chevron-down"></i></a>
+                    <ul class="mob-sub-menu-listing">
+                        <li><a href="/courses/">Courses</a></li>
+                        <li><a href="#">E-learning (Coming Soon)</a></li>
+                    </ul>
+                </li>
+                <li><a href="/events/">Events</a></li>
+                <li><a href="/discussions/">Discussions</a></li>
+                <li><a href="/news/">News</a>
+                <li><a href="/articles/">Blog</a></li>
+                <li >
+                    <a href="#">Resources <i class="fas fa-chevron-down"></i></a>
+                        <ul class="mob-sub-menu-listing">
+                            <li><a href="/videos/">Videos</a></li>
+                            <li><a href="/research/">Research</a></li>
+                            <li><a href="/resources/">Tools & Websites</a></li>
+                        </ul>
+                </li>
+                <li ><a href="/media-releases/">PRESS</a></li>
+                <li>
+                    {% if request.user.is_authenticated %}
+                    <a class="pr-0" href="/accounts/logout/"><i class="fa fa-sign-out"></i>Logout</a>
+                    {% else %}
+                    <a class="regBtn pr-0" data-action="norm" data-toggle="modal" data-target="#loginModal"><i
+                            class="fa fa-user"></i>Login</a>
+                    {% endif %}
+                </li>
+            </ul>
+    </div>
+    </div>
+    </header>
+    {#   Sidebar Section Ends #}
+
+    {#   Top Menu Section Starts #}
+    <section class="bg-top-menu-home">
+        <div class="container">
+                <div class="row">
+                    <div class="col-md-4 header-logo">
+                        <a href="/"><img src="{% static 'images/logo.png' %}" class="" alt="" /></a>
+                    </div>
+                    <div class="col-md-8 vcenter vright" id="top-right-menu">
+
+                        <ul class="list-unstyled top-menu-listing vcenter">
+                            <li><a href="/about-us/">About Us</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/contact-us/">Contact Us</a></li>
+                        </ul>
+    
+                        {% if request.user.is_authenticated %}
+                        <div class="dropdown ml-5">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user"></i>&nbsp;&nbsp;{{ request.user.get_full_name|truncatechars:10 }}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="{% url 'user-profile' %}">Profile / Settings</a>
+                                <a class="dropdown-item" href="{% url 'user-courses' %}">Course Attendance</a>
+                                
+                            </div>
+                        </div>  
+                        {% endif %}
+                        
+                    </div>
+                </div>
+        </div>
+    </section>
+{#   Top Menu Section Ends #}
+{#   Navigation Menu Section Starts #}
+<section>
+    <div class="container bg-navigation-menu-home">
+        <div class="row">
+            <div class="col-sm-10 col-md-10 col-lg-9">
+                <div class="navigation-menu">
+                    <ul class="menu-listing">
+                        <li><a href="/"><i class="fas fa-home" style="font-size: 16px;"></i></a></li>
+                        <li class="dropdown"><a href="#">Learn <i class="fas fa-chevron-down"></i></a>
+                            <div class="sub-menu">
+                                <ul class="sub-menu-listing">
+                                    <li><a href="/courses/">Courses</a></li>
+                                    <li><a href="#">E-learning (Coming Soon)</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/discussions/">Discussions</a></li>
+                        <li><a href="/news/">News</a></li>
+                        <li><a href="/articles/">Blog</a></li>
+                        <li class="dropdown"><a href="#">Resources <i class="fas fa-chevron-down"></i></a>
+                            <div class="sub-menu">
+                                <ul class="sub-menu-listing">
+                                    <li><a href="/videos/">Videos</a></li>
+                                    <li><a href="/research/">Research</a></li>
+                                    <li><a href="/resources/">Tools & Websites</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li ><a href="/media-releases/">PRESS</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-3">
+                <ul class="login-listing text-right">
+                    <li>{% if request.user.is_authenticated %}
+                        <a class="pr-0" href="/accounts/logout/"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+                        {% else %}
+                        <a class="regBtn pr-0" data-action="norm" data-toggle="modal" data-target="#loginModal"><i
+                            class="fa fa-user"></i>Login</a>
+                            {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="jumbotron jumbotron-fluid {% block jtron_css %}{% endblock jtron_css %}" style="{% block jtron_style %}{% endblock jtron_style %}">
+    <div class="container">
+        {% block jtron %}
+            
+        {% endblock jtron %}
+    </div>
+</div>
+
+{#   Banner Section Ends #}
+    
+{% block content %}
+        
+{% endblock content %}
+{#   Copyright Section Starts #}
+
+    <div class="container-fluid bg-copyright-home">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="copyright">DPEX Network is a Community Initiative of <a href="https://www.straitsinteractive.com/">Straits Interactive</a>.</p>
+
+                        <p class="copyright">Copyright &copy; {% now 'Y' %} Straits Interactive Pte Ltd. All Rights Reserved.</p>
+                    
+                        <p class="copyright">All intellectual property rights to logos and brands featured on this website remain the property of their respective owners.</p>
+                        <p class="copyright mb-0"><a href="/terms-and-conditions/">Terms and Conditions</a> | <a href="/privacy-policy/">Privacy Policy</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    {% if not request.user.is_authenticated %}
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h5>Welcome to the</br>Data Protection Excellence Network</h5>
+                            </div>
+                        </div>
+                        {% if page.signup %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="text-center">Sign up as a member for free and get access to our </br> data protection resources (news, guidance, </br>video tutorials and case studies.
+                                </br></br>
+                                <a class="text-underline" href="{{ page.signup }}"><u>Proceed directly to register for course</u></a>
+                                </p>
+
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                        <ul class="nav nav-tabs mt-3 nav-fill" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link " id="signup" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Sign Up</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link active" id="login" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Login</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-4" id="myTabContent">
+                            <div class="tab-pane fade " id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div id="signupDiv">
+                                    
+                                    {% crispy sform %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show active in" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div id="loginDiv">
+                                    {% crispy aform %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% endif %}
+{#    Scroll to top#}
+
+{#   Copyright Section Ends #}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+{#   Smooth Scroll JS #}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {#     thm custom script #}
+    {% compress js inline %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/django_ajax.js' %}"></script>
+    {% endcompress %}
+
+    <script>
+    $(document).ready(function(){
+        var action = ''
+        $('.regBtn').on('click', function(){
+            action = $(this).data('action')
+        });
+
+        $('.dropdown').on('click', function(){
+            $(this).find('ul').toggle();
+        });
+
+         $('.dropdown-btn').on('click', function(){
+            $(this).closest('.dropdown').find('ul').toggle();
+        });
+
+        {% if not request.user.is_authenticated %}
+        var action = 'norm';
+
+        $('#signupForm .control-group').addClass('row');
+        $('#loginForm .control-group').addClass('row');
+
+        $("body").on('click', '#loginForm button', function(){
+            if (!$("#loginForm button").prop('disabled')){
+                $.ajax({
+                    url: "{% url 'eauth-login' %}",
+                    type: "POST",
+                    data: $("#loginForm").serialize(),
+                    success: function(data) {
+                        if (data.success) {
+                            toastr.info('Login Successful! Welcome back ' + data.user + '.');
+                            setTimeout(function(){location.reload();}, 2000);
+                        } else {
+                            $('#loginDiv').html(data.form_html);
+                            $('#loginForm .form-group').addClass('row');
+                        }
+
+                    },
+                });
+            }
+        });
+
+        $('.joinBtn').on('click', function(){
+            $('#signup').trigger('click');
+        })
+
+        $("body").on('click', '#signupForm .usignup', function(){
+            
+            $('#signupForm .usignup').attr('disabled', true);
+
+            $.ajax({
+                url: "{% url 'eauth-signup' %}",
+                type: "POST",
+                data: $("#signupForm").serialize() + "&action=" + action ,
+                success: function(data) {
+                    if (data.success) {
+                        toastr.info('Signup Successful! Welcome to the Data Protection Excellence (DPEX) Network ' + data.user + '. Please check your email for the activation link to gain access to member features.');
+                        setTimeout(function(){location.reload();}, 2000);
+                    } else {
+                        $('#signupDiv').html(data.form_html);
+                        $('#signupForm .form-group').addClass('row');
+                    }
+
+                },
+                complete: function(){
+
+                    $('#signupForm .usignup').attr('disabled', false);
+                }
+            });
+        });
+
+        $("body").on('click', '.passToggle', function() {
+            var input = $(this).closest('.input-group').find('input');
+            var type = input.attr('type');
+
+            if (type === "password") {
+                input.attr('type', "text");
+            } else {
+                input.attr('type', "password");
+            }
+
+        });
+
+
+
+
+        {% endif %}
+    });
+    </script>
+    {% block extra_js %}
+        
+    {% endblock extra_js %}
+    <script>
+     function initFreshChat() {
+    window.fcWidget.init({
+      token: "abb8596b-d546-4bfd-9897-fd2eb1f112ff",
+      host: "https://wchat.freshchat.com",
+      tags: ["dpexnetwork"],
+      siteID: "DPEX-Network"
+    });
+  }
+  function initialize(i,t){var e;i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}function initiateCall(){initialize(document,"freshchat-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);
+</script>
+<script>
+  window.addEventListener('load',function(){
+    $('#signupForm .usignup').click(function(){
+        gtag('event', 'conversion', {'send_to': 'AW-968586759/fAeICITm4dUBEIfs7c0D'});
+    })
+    $('#loginForm button').click(function(){
+        gtag('event', 'conversion', {'send_to': 'AW-968586759/vdpFCI-CgNYBEIfs7c0D'});
+    })
+  })
+</script>
+</body>
+</html>

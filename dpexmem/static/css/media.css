@@ -1,0 +1,99 @@
+@media only screen and (max-width: 1199px) {
+
+	/*------- Body and Blur Section CSS Starts -------*/
+
+body.overflow-hidden { overflow-y: hidden; }
+.bg-blur { background-color: #000000a7; bottom: 0; display: none; height: 100%; left: 0; right: 0; position: fixed; top: 0; width: 100%; z-index: 3; }
+.bg-blur.active { display: block; }
+
+	/*------- Body and Blur Section CSS Ends -------*/
+
+	/*------- Mobile Hamburger Menu and Navigation Menu Section Starts -------*/
+
+.hamburger-menu,
+.fixed-sidebar { display: block; }
+.hamburger-menu { left: 0; position: fixed; top: 0; transition: 0.5s linear; -webkit-transition: 0.5s linear; -moz-transition: 0.5s linear; -ms-transition: 0.5s linear; -o-transition: 0.5s linear; z-index: 1040; }
+.hamburger-menu.active { left: 220px; }
+.burger-menu { background-color: #ea983e; border-radius: 0 0 14px 0; -webkit-border-radius: 0 0 14px 0; -moz-border-radius: 0 0 14px 0; -ms-border-radius: 0 0 14px 0; -o-border-radius: 0 0 14px 0; height: 50px; position: relative; width: 50px; }
+.burger-menu span { background-color: #fff; height: 2px; left: 50%; position: absolute; top: 50%; transform: translate(-50%,-50%); -webkit-transform: translate(-50%,-50%); -moz-transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%); -o-transform: translate(-50%,-50%); width: 20px; }
+.burger-menu span:before,
+.burger-menu span:after { background-color: #fff; content: ""; height: 2px; left: 0; position: absolute; top: -10px; width: 15px; }
+.burger-menu span:after { left: 0; top: 10px; width: 25px; }
+.fixed-sidebar { background-color: #ea983e; left: 0; position: fixed; top: 0; transform: translateX(-100%); -webkit-transform: translateX(-100%); -moz-transform: translateX(-100%); -ms-transform: translateX(-100%); -o-transform: translateX(-100%); transition: 0.5s linear; -webkit-transition: 0.5s linear; -moz-transition: 0.5s linear; -ms-transition: 0.5s linear; -o-transition: 0.5s linear; width: 220px; z-index: 1040; }
+.fixed-sidebar.active { transform: translateX(0); -webkit-transform: translateX(0); -moz-transform: translateX(0); -ms-transform: translateX(0); -o-transform: translateX(0); }
+.mob-menu-listing > li { display: block; padding: 0}
+.mob-menu-listing > li > a { color: #fff !important; display: block; font: 16px "NotoSans-Medium"; margin: 0px 0; padding: 8px 15px; position: relative; text-transform: uppercase; }
+.mob-menu-listing > li > a > i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); -moz-transform: translateY(-50%); -ms-transform: translateY(-50%); -o-transform: translateY(-50%); }
+.mob-menu-listing > li > a:hover,
+.mob-menu-listing > li.active > a {background: #e84d1c; color: white; }
+.mob-sub-menu-listing { background-color: #ff9823; display: none; }
+.mob-sub-menu-listing > li > a { color: #fff; display: block; font: 16px "NotoSans-Medium"; letter-spacing: 1px; padding: 8px 0px 8px 30px; text-transform: uppercase; }
+.mob-sub-menu-listing > li > a:hover { background-color: #fff; color: #000; }
+
+	/*------- Mobile Hamburger Menu and Navigation Menu Section Ends -------*/
+
+	/*------- Top Menu Section Starts -------*/
+
+.bg-top-menu-home:before,
+.bg-top-menu-home:after { display: none; }
+.flex-align-center-mob { display: block; }
+.img-logo { margin: 0 auto 15px; width: 100px; }
+.top-menu-ce-listing { text-align: center; }
+.top-menu-ce-listing > li { margin: 0 15px 15px 0; }
+.top-menu-ce-listing > li > a > img { height: 30px; padding-right: 5px; }
+.top-menu-listing { text-align: center; }
+
+	/*------- Top Menu Section Ends -------*/
+
+	/*------- Navigation Menu Section Starts -------*/
+
+.bg-navigation-menu-home { display: none; }
+.navigation-menu { display: none; }
+.navigation-menu.active { display: block; }
+
+	/*------- Navigation Menu Section Ends -------*/
+
+	/*------- Banner Section Starts -------*/
+
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+	/*------- Top Menu and Navigation Menu Section Starts -------*/
+
+.bg-top-menu-home:before,
+.bg-top-menu-home:after,
+.bg-navigation-menu-home:before,
+.bg-navigation-menu-home:after { display: none; }
+.img-logo { width: 150px; }
+.menu-listing > li { margin-right: 9px; }
+.top-menu-ce-listing > li { display: block; margin: 0 0 5px; }
+.top-menu-ce-listing > li > a > img { height: 40px; }
+.menu-listing > li > a, 
+.login-listing > li > a { font-size: 1.5rem; }
+
+	/*------- Top Menu and Navigation Menu Section Ends -------*/
+
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+	/*------- Top Menu and Navigation Menu Section Starts -------*/
+
+.bg-top-menu-home:before,
+.bg-top-menu-home:after,
+.bg-navigation-menu-home:before,
+.bg-navigation-menu-home:after { display: none; }
+.img-logo { width: 150px; }
+.menu-listing > li { margin-right: 12px; }
+.top-menu-ce-listing > li { margin: 0 0 5px; }
+.top-menu-ce-listing > li > a > img { height: 40px; }
+
+	/*------- Top Menu and Navigation Menu Section Ends -------*/
+
+	/*------- Banner Section Starts -------*/
+
+
+}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+{% load crispy_forms_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+.thumbnail {
+    position: relative;
+}
+
+.caption:hover {
+  color: #fd7e14;
+}
+.caption {
+    font-size:40px;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    width: 100%;
+}
+
+.courseList img{
+   width: 150px;
+}
+
+.courseList li {
+    float: left;
+}
+
+.courseList .disabled {
+    opacity: .5;
+    filter: grayscale(100%);
+}
+
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+{{ user_form.media.css }}
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{% trans "All Pending Attendances" %}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <hr />
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                {{ user_form }}
+            </div>
+            <div class="col-md-8">
+                <button class="btn btn-primary pull-right" type="submit">Update</button>
+            </div>
+        </div>
+        <hr />
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <table class="table" id="attList">
+                        <thead>
+                            <th class="no-sort"></th>
+                            <th>Title</th>
+                            <th>Attendance Email</th>
+                        </thead>
+                        <tbody>
+                        {% for item in atts %}
+                            <tr>
+                                <td> <input type="checkbox" name="att" value="{{item.id}}"> </td>
+                                <td> {{ item.course.title }} </td>
+                                <td> {{ item.email }} </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block extra_js %}
+{{ user_form.media.js }}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#attList').dataTable( {
+        order: [],
+        columnDefs: [
+            { targets: 'no-sort', orderable: false }
+        ],
+    });
+    $(".django-select2").select2({
+        width: '100%',
+    });
+} );
+</script>
+{% endblock extra_js %}
+

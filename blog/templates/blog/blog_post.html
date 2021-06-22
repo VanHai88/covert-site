@@ -1,0 +1,22 @@
+{% load wagtailcore_tags static %}
+
+<div class="row mt-2">
+    <div class="col-12 text-right">
+         <h5>{{ blog.date|date:"j M, Y" }}</h5>
+    </div>
+    
+</div>
+<img id="blogImg" class="mt-4" src="{{ blog.get_banner }}" alt="">
+
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+            <div class="getsocial gs-inline-group"></div>
+    </div>
+</div>
+<hr>
+<div class="blog-body">
+    {{ blog.body|richtext }}
+</div>
+<hr>
+
+

@@ -1,0 +1,17 @@
+{% if messages %}
+<div class="row space-top-2x">
+    {% for message in messages %}
+    <div class="col-md-12">
+        {% if 'safe' in message.tags %}
+            {% if 'success' in message.tags %}
+                <div class="alert alert-success">{{ message|safe }}</div>
+            {% elif 'danger' in message.tags %}
+                <div class="alert alert-danger">{{ message|safe }}</div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

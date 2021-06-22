@@ -1,0 +1,18 @@
+{% load course_tags %}
+
+{% if courses %}
+<div class="row">
+    {% sort_courses courses as sorted_courses %}
+    {% for course in sorted_courses %}
+    <div class="col-md-4 mb-3">
+        {% include "__course_card.html" %}
+    </div>
+    {% endfor %}                
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>No courses found</h4>       
+    </div>
+</div>
+{% endif %}

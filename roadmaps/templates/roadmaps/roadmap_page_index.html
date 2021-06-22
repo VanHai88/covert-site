@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% load url_tags %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.05),
+          rgba(0, 0, 0, 0.35)
+        ), url('{% static "images/roadmaps.jpg" %}');
+    background-position: center center !important;
+    
+}
+
+.fact-single-item i {
+    font-size: 35px;
+}
+
+.imgDiv {
+    background-size:contain;
+}
+
+.blue-header {
+    margin-left: 50px;
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+               {{ page.body|safe }}
+            </div>
+        </div>
+        
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <img class="newsImg float-left " src="/static/images/flags/sg.png"><p class=" blue-header mb-0">Singapore</p>
+            </div>
+        </div>
+
+
+        <div class="row mt-4 mb-3">
+            {% for item in rmaps.SG %}    
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="fact-single-item two text-center">
+                                    <i class="fal fa-books" aria-hidden="true"></i>
+                                    <h4>{{ item.title }}</h4>
+
+                                    <a href="{{ item.url }}" class="mt-2 btn btn-primary btn-sm btn-long">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <img class="newsImg float-left " src="/static/images/flags/my.png"><p class=" blue-header mb-0">Malaysia</p>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <h4>Coming soon. Stay tuned for our release.</h4>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <img class="newsImg float-left " src="/static/images/flags/ph.png"><p class=" blue-header mb-0">Philippines</p>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <h4>Coming soon. Stay tuned for our release.</h4>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <img class="newsImg float-left " src="/static/images/flags/id.png"><p class=" blue-header mb-0">Indonesia</p>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <h4>Coming soon. Stay tuned for our release.</h4>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <img class="newsImg float-left " src="/static/images/flags/th.png"><p class=" blue-header mb-0">Thailand</p>
+            </div>
+        </div>
+        <div class="row mt-4 mb-3">
+            <div class="col-md-12">
+                <h4>Coming soon. Stay tuned for our release.</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

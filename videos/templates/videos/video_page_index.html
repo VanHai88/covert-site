@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/swiper@5.4.5/css/swiper.min.css">
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.4)
+        ), url('{% static "images/videos.jpg" %}');
+   
+}
+
+.midVid {
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+.slide-gallery img{
+    width: 100%;
+}
+
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="slide-gallery mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+               <h2 class="sectText">
+                   Browse our collection of Data Protection Videos</br> to gain insights on pertinent topics
+               </h2>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row mb-4">
+            <div class="col-md-3 offset-md-9">
+                <div class="input-group">
+                    <input id="searchVideos" type="text" name="search" class="form-control" value="" placeholder="Search videos">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="searchDiv" data-head="Search Results">
+        </div>
+        
+        <h5>Highlights</h5>
+        <div class="row no-gutters">
+        {% for vid in videos  %}
+        <div class="col-md-4 midVid mb-4">
+            <a href="{{ vid.get_url }}">
+            <img src="{{ vid.get_banner }} " alt="">
+            </a>
+        </div>
+        {% endfor %}
+        </div>
+        {% for tag in tags  %}
+        <div id="tag-{{ tag.id }}" data-head="{{ tag.text }}">
+            
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/swiper@5.4.5/js/swiper.min.js"></script>
+<script>
+$(document).ready(function(){
+    var search = ''
+
+    var mdev = window.matchMedia("(max-width: 700px)")
+
+    if (mdev.matches) { // If media query matches
+        scount = 2
+    } else {
+        scount = 4
+    }
+
+    var timer = null;
+
+    $('#searchVideos').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            var search = $('#searchVideos').val();
+        load_videos(search, '');
+       }, 500)
+    });
+
+    var load_videos = function (search, cat) {
+        
+        $.ajax({
+            url: "/api/videos/?format=html&search=" + search + "&cat=" + cat,
+            type: "GET",
+            success: function(data) {
+                
+                if (cat != '' ){
+                    var cont = $('#tag-' + cat)
+                } else {
+                    var cont = $('#searchDiv')
+                }
+
+                cont.html(data)
+
+                var swipeCont = cont.find('.swiper-container')
+                new Swiper (swipeCont, {
+                    slidesPerView: scount,
+                    spaceBetween: 1,
+                    loop: true,
+                    loopFillGroupWithBlank: true,
+                    freeMode: true,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    
+                    loop: true
+                })
+
+                cont.find('h5').html(cont.data('head'))
+            }
+        });
+    }
+
+    {% for tag in tags %}
+    load_videos('', {{ tag.id }});
+    {% endfor %}
+
+
+
+    $('body').on('hover', '.swiper-slide', function(){
+
+    });
+})
+</script>
+
+{% endblock extra_js %}

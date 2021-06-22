@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.65)
+        ), url('{% static "images/news.jpg" %}');
+
+}
+
+#artTable td{
+    vertical-align: middle;
+}
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>All News</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+               <h2 class="sectText">
+                   Keep up to date with the latest Data Protection News</br> or browse our Archives
+               </h2>
+            </div>
+        </div>
+        <hr class="mb-2">
+        <form id="eventForm">
+        <div class="row">
+            <div class="col-6 col-md-2 mt-2">
+                <select name="location" id="locSel" class="form-control newsSel">
+                    <option value="">All Locations</option>
+                    <option value="ID" {% if country == 'ID' %}selected{% endif %}>Indonesia</option>
+                    <option value="MY" {% if country == 'MY' %}selected{% endif %}>Malaysia</option>
+                    <option value="PH" {% if country == 'PH' %}selected{% endif %}>Philippines</option>
+                    <option value="SG" {% if country == 'SG' %}selected{% endif %}>Singapore</option>
+                    <option value="TH" {% if country == 'TH' %}selected{% endif %}>Thailand</option>
+                </select>
+            </div>
+            
+                {% if not request.user.is_authenticated %}
+                <div class="col-6 col-md-10 mt-2 vcenter">
+                <input type="hidden" class="dateRange" value="{{ drange }}">
+                <h5 class="mb-0">
+                    Become a <strong>DPEX Community</strong> member to access our data protection news archive beyond 30 days.
+                </h5> 
+                
+                </div>
+                {% else %}
+                <div class="col-6 col-md-3 mt-2">
+
+                <input type="text" class="form-control dateRange" placeholder="Enter Date Range" value="{{ drange }}">
+                </div>
+                {% endif %}
+                
+            
+        </div>
+        </form>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table" id="artTable" style="width: 100%">
+                    <thead>
+                        <th>Title</th>
+                        <th>Published</th>
+                        <th>Summary</th>
+                        <th>Author</th>
+                        <th>URL</th>
+                        <th>Country</th>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>   
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+$(document).ready(function(){
+    {% if request.user.is_authenticated %}
+    $('.dateRange').daterangepicker({
+        "locale": {
+            "format": "YYYY-MM-DD",
+        },
+    });
+    {% endif %}
+
+
+    function setWithExpiry(key, value, ttl) {
+        const now = new Date()
+
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+    }
+
+    function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+            // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null
+        }
+
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+            // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            localStorage.removeItem(key)
+            return null
+        }
+
+        return item.value
+    }
+    
+    $('.dateRange').val(getWithExpiry('newsdr'));
+
+
+    var table = $('#artTable').DataTable({
+        "serverSide": true,
+        "scrollX": true,
+        "ajax": {
+            "url":"https://brain.genexist.com/apis/news-priv/?format=datatables",
+            //"url":"https://straits.ap.ngrok.io/apis/news-priv/?format=datatables",
+            "headers" : {
+                "Authorization": "{{ settings.BRAIN_KEY }}"
+            },
+            "data": {
+                country: function() { return $('#locSel').val() },
+                dateRange: function() { return $('.dateRange').val() }
+            }
+        },
+        "order": [[ 1, "desc" ]],
+        "lengthMenu": [[10, 15, 20], [10, 15, 20]],
+        "columnDefs": [ {
+            targets: 2,
+            render: function ( data, type, row ) {
+                return data.length > 100 ?
+                    data.substr( 0, 100) +'…' :
+                    data;
+            }
+        }],
+        "columns": [
+           {"data": "dmurl", "name": "title"},
+           {"data": "published"},
+           {"data": "content"},
+           {"data": "author"},
+           {"data": "nurl", "searchable": false, "orderable": false},
+           {"data": "country", "searchable": false, "orderable": false},
+        ]
+    });
+
+    $('.dateRange').change(function() {
+        setWithExpiry('newsdr', $(this).val(), 3600000);
+        table.ajax.reload();
+    });
+
+    $('#locSel').change(function() {
+        table.ajax.reload();
+    });
+
+    
+});
+</script>
+{% endblock extra_js %}

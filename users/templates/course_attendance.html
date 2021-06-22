@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+.thumbnail {
+    position: relative;
+}
+
+.caption:hover {
+  color: #fd7e14;
+}
+.caption {
+    font-size:40px;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    width: 100%;
+}
+
+.courseList img{
+   width: 150px;
+}
+
+.courseList li {
+    float: left;
+}
+
+.courseList .disabled {
+    opacity: .5;
+    filter: grayscale(100%);
+}
+
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{% trans "My Profile & Courses" %}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Coming Soon. We will be loading the couses you have attended shortly. Please contact <a href="mailto:courses@straitsinteractive.com">courses@straitsinteractive.com</a> with any queries.</p>
+                    </div>
+                </div>
+
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <p class="black-header">Foundation</p>   
+                    
+                        <ul class="list-inline courseList">
+                            {% for item in ct_map.Foundation.main %}
+                            <li class="list-inline-item text-center {% if not item.cdate %}disabled{% endif %}">
+                                <img src="{{ item.get_badge }}" alt=""></br>
+                                <strong>{{ item.cdate }}</strong>
+                            </li>
+                            {% endfor %} 
+                        </ul>
+                    </div>
+                </div>
+    
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <p class="black-header">Advanced</p>   
+                    
+                        
+                        {% for k, v in ct_map.Advanced.items %}
+                        <div class="row">
+                            <div class="col-md-12">
+                            <p class="blue-header text-center ">{{ k }}</p>
+
+                            <ul class="list-inline courseList">
+                                {% for item in v %}
+                                <li class="list-inline-item text-center {% if not item.cdate %}disabled{% endif %}">
+                                    <img src="{{ item.get_badge }}" alt=""></br>
+                                    <strong>{{ item.cdate }}</strong>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            </div>
+                        </div>
+                        {% endfor %} 
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <p class="black-header">International</p>   
+                    
+                        <ul class="list-inline courseList">
+                            {% for item in ct_map.International.main %}
+                             <li class="list-inline-item text-center {% if not item.cdate %}disabled{% endif %}">
+                                <img src="{{ item.get_badge }}" alt=""></br>
+                                <strong>{{ item.cdate }}</strong>
+                            </li>
+                            {% endfor %} 
+                        </ul>
+                    </div>
+                </div>
+
+                {% if ct_map.International.Enhanced %}
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <p class="black-header">Enhanced</p>   
+                    
+                        <ul class="list-inline courseList">
+                            {% for item in ct_map.Enhanced.main %}
+                            <li class="list-inline-item text-center {% if not item.cdate %}disabled{% endif %}">
+                                <img src="{{ item.get_badge }}" alt=""></br>
+                                <strong>{{ item.cdate }}</strong>
+                            </li>
+                            {% endfor %} 
+                        </ul>
+                    </div>
+                </div> 
+                {% endif %}
+                
+            </div>
+            <div class="col-md-3">
+                
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var search = ''
+
+    $('#Search').on('input',function(e){
+        load_items()
+    });
+
+    var load_items = function () {
+        search = $('#Search').val();
+        $.ajax({
+            url: "/api/attendances/?format=html&search=" + search,
+            type: "GET",
+            success: function(data) {
+                $('#itemDiv').html(data)
+            }
+        });
+    }
+
+  load_items()
+
+})
+</script>
+
+{% endblock extra_js %}
+

@@ -1,0 +1,95 @@
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+
+<div class="row">
+    <div class="col-md-3 order-md-2">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div id="calendar"></div>
+            </div>        
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="fa fa-phone fa-fw oicon"></i>&nbsp;&nbsp;Contact</h5>
+                <p class="mb-2">{{ value.contact }}</p>
+                <h5><i class="fa fa-envelope fa-fw oicon"></i>&nbsp;&nbsp;Email</h5>
+                <p class="mb-2">{{ value.email }}</p>
+                <h5><i class="fa fa-user fa-fw oicon"></i>&nbsp;&nbsp;Ideal For</h5>
+                <ul>
+                    {% for x in value.ideal_for %}
+                        <li>{{ x }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-body">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-tab-over" data-toggle="tab" href="#tab-over" role="tab" aria-selected="true">Overview</a>
+                        <a class="nav-item nav-link" id="nav-tab-dets" data-toggle="tab" href="#tab-dets" role="tab"aria-selected="false">Details</a>
+                        <a class="nav-item nav-link" id="nav-tab-inc" data-toggle="tab" href="#tab-inc" role="tab"aria-selected="false">Included</a>
+                        <a class="nav-item nav-link" id="nav-tab-fees" data-toggle="tab" href="#tab-fees" role="tab" aria-selected="false">Fees / Funding</a>
+                        <a class="nav-item nav-link" id="nav-tab-reg" data-toggle="tab" href="#tab-reg" role="tab" aria-selected="false">Registration</a>
+                    </div>
+                </nav>
+                <div class="tab-content mt-4" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="tab-over" role="tabpanel">
+                        {{ value.overview }}
+                    </div>    
+                    <div class="tab-pane fade" id="tab-dets" role="tabpanel">
+                        {{ value.details }}
+                    </div>
+                    <div class="tab-pane fade" id="tab-inc" role="tabpanel">
+                        <ul>
+                            {% for item in value.included %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>    
+                    </div>
+                    <div class="tab-pane fade" id="tab-fees" role="tabpanel">
+                        {{ value.fees }}
+                    </div>
+                    <div class="tab-pane fade" id="tab-reg" role="tabpanel">
+                        {{ value.registration }}
+                    </div>
+            
+
+                </div>
+            </div>
+        </div>
+
+        {% if value.testimonials %}
+        
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <p class="black-header">Testimonials</p>
+            </div>
+        </div>
+        <div class="swiper-container mt-2">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                {% for item in value.testimonials %}
+                <div class="swiper-slide text-center">
+                     {% include_block item %}
+                </div>    
+                {% endfor %}
+            </div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+        </div>
+            
+        {% endif %}
+        
+    </div>
+</div>
+
+
+
+
+    

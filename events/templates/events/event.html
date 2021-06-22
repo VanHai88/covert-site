@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    padding: 8em 2em 4em 2em;
+}
+
+.ititle h1 {
+    font-size: 45px;
+}
+
+.ititle h5 {
+    color: white;
+}
+
+.ititle img {
+    width: 100px;
+}
+
+.ititle h6 {
+    color: #ddd;
+}
+
+.courseBanner {
+    overflow: hidden;
+    position: relative;
+    min-height: 350px;
+}
+
+.courseBanner img {
+    height: auto;
+    width: 100%;
+    max-width: none;
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    right: -9999px;
+    margin: auto;
+}
+
+.courseDiv {
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+#map {
+    height: 300px;
+    width: 100%;
+}
+</style>
+{% endblock extra_css %}
+
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron_style %}
+background-image: url('{{ page.get_banner }}');    
+{% endblock jtron_style %}
+
+{% block jtron %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1>{{ page.title }}</h1>
+        <h5 class="mt-4">{{ page.start|date:"j M Y" }}, {{ page.start|date:"g:i A" }} - {{ page.end|date:"g:i A" }}</h5>
+        <h5>
+            {% if page.etype == 'webinar' %}
+                Online Webinar
+                {% else %}
+            {{ page.address }}
+            {% endif %}
+        </h5>
+        <h6 class="mt-2">Presented By:</h6>
+
+        <ul class="list-inline mt-4">
+            {% for p in partners %}
+            <li class="list-inline-item"><img src="{{ p.partner.get_logo }}" alt=""></li>    
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mt-4">
+                            <div class="col-md-6  offset-md-3 text-center">
+                                <h5>{{ page.start|date:"M" }}</h5>
+                                <h1>{{ page.start|date:"j" }}</h1>
+                                <hr>    
+                                <h5>{{ page.start|date:"Y" }}</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-4 mb-4">
+                            <div class="col-md-12 text-center">
+                                {% if page.etype == 'webinar' and page.address %}
+                                <h3 class="mt-4">Event</h3>
+                                <h5>Online Webinar</h5>
+                                {% else %}
+                                <h3 class="mt-4">Location</h3>
+                                <h5>{{ page.address|default:'-'|title }}</h5>
+                                {% endif %}
+                                
+                                {% if page.eactive %}
+
+                                    {% if page.reg_url %}
+                                        <a href="{{ page.reg_url }}" class="mt-4 btn btn-primary btn-long"><i class="fa fa-user-plus"></i>&nbsp;&nbsp;REGISTER</a>
+                                    
+                                    {% else %}
+                                    
+                                        {% if request.user.is_authenticated %}
+                                
+                                        <a href="{% url 'submit-reg' 'event' page.id %}" class="mt-4 btn btn-primary btn-long"><i class="fa fa-user-plus"></i>&nbsp;&nbsp;REGISTER</a>
+                                
+                                        {% else %}
+                                        
+                                        <p class="mt-4">Login now to register!</p>
+                                        <button data-toggle="modal" data-action="register" data-target="#loginModal" class=" btn btn-primary btn-long regBtn"><i class="fa fa-user"></i>&nbsp;&nbsp;Login</button>
+                                        
+                                    {% endif %}
+                                
+                                {% endif %}    
+
+                                {% else %}
+                                <strong>This event is now over.</br>Please look out for the next one.</strong>
+                                {% endif %}
+
+                                <div class="mt-4 getsocial gs-inline-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if page.etype != 'webinar' and page.address %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div id="map"></div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <h2>{{ page.title }}</h2>
+                {% include_block page.body %}    
+            </div>
+        </div>
+       {{ page.location.lat }}
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="{% static 'js/calendar/calendar.min.js' %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ settings.GOOGLE_MAPS_V3_APIKEY }}&callback=initMap"
+    async defer></script>
+
+{% if page.etype != 'webinar' and page.address %}
+<script>
+      var map;
+      var latlng = {lat: {{ page.lat }}, lng: {{ page.lng }}};
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: latlng,
+          zoom: 15
+        });
+
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: 'Hello World!'
+        });
+      }
+    </script>
+   
+{% endif %}
+{% endblock extra_js %}

@@ -1,0 +1,50 @@
+{% load i18n %}
+
+{% if blogs %}
+{% for blog in blogs %}
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="{{ blog.url }}">
+        <div class="card">
+
+            <div class="row">
+                <div class="col-5 col-md-4 pr-0">
+                    <div class="imgDiv" style="background-image: url('{{ blog.banner }}')"></div>
+                </div>
+                <div class="col-7 col-md-8 pl-0">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <h5 class="">{{ blog.title|truncatechars:"60" }}</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="cardDiv">{{ blog.body|striptags|truncatechars_html:250 }}</div>
+
+
+
+                        <div class="row mt-4 mb-0">
+                            <div class="col-6">
+                                <p class="text-more mb-0">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p class="mb-0">{{ blog.date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+</div>
+{% endfor %}
+
+{{ pagination }}
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>No topics found</h4>        
+    </div>
+</div>
+{% endif %}

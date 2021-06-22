@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.65)
+        ), url('{% static "images/blog.jpg" %}');
+    background-position: right top !important;
+}
+
+#blogImg {
+    width: 60%;
+    display: block;
+    margin: 0 auto;
+}
+
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>{{ self.title }}</h1>
+{% endblock jtron %}
+
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12" id="blogDiv">
+                                {% include 'blog/blog_post.html' with blog=self %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% include "coral_div.html" %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card "  id="blogList">
+                    <div class="card-header bg-dark">
+                        <i class="fa fa-tag" aria-hidden="true"></i>&nbsp;&nbsp;Topics
+                    </div>
+                    <div class="card-body">
+                
+                        <div class="side-menu">
+                        
+                            <ul class="side-bar-menu list-unstyled mb-0">
+                            
+                                {% for cat in cats %}
+                                <li data-id="{{ cat.id }}"><a href="/articles/?cat={{ cat.id }}"><span></span>{{ cat.name }}</a></li>
+                                {% endfor %}
+
+                            </ul>
+                            
+                        </div>
+                
+                    </div>
+                </div>
+                
+                <div class="card mt-3"  id="blogList">
+                    <div class="card-header bg-dark">
+                        <i class="fa fa-books" aria-hidden="true"></i>&nbsp;&nbsp;Related Articles
+                    </div>
+                    <div class="card-body">
+                        {% for item in related %}
+                        <h5>{{ item.title|truncatechars:50 }}</h5>
+                        <p>{{ item.body|striptags|truncatechars_html:80 }}</p>
+    
+
+                        <div class="text-right">
+                            <a class="text-more" href="{{ item.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>    
+                        </div>
+                        {% if not forloop.last %}
+                            <hr>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>    
+{% endblock %}
+
+{% block extra_js %}
+{% if not request.is_preview %}
+{% include "coral.html" with obj=self ident="ART" %}    
+{% else %}
+Preview mode no comments
+{% endif %}
+{% endblock extra_js %}

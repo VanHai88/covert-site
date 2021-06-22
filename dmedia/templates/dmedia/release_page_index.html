@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+{% load url_tags %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.25),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/press.jpg" %}');
+    
+}
+
+
+.wrapper {
+    margin: 0 auto;
+    padding: 0 0 50px 16.66%;
+    width: 100%;
+}
+
+.relbody {
+    min-height: 10.5rem;
+
+}
+
+.timeline__nav { 
+    position: fixed;
+    z-index: 99;
+    transition: top .3s ease-out;
+}
+
+.timeline__nav > ul {
+    list-style: none;
+    list-style-position: inside;
+    margin: 15px 0;
+}
+        
+.timeline__nav li {
+    margin: 15px 0;
+    padding-left: 0;
+    list-style-type: none;
+    color: #bfc1c3;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all .3s ease-out;
+}                
+                
+.timeline__nav li.active {
+    font-weight: bold;
+    color: #ea983e;
+    border-bottom: 1px dotted transparent;
+    transform: scale(1.2);
+}
+                
+.timeline__nav li:hover {
+    color: #000
+}
+
+@media only screen and (max-width: 550px){
+    .timeline__nav > ul {
+        padding-left: 10px;
+    }
+
+    .relbody {
+        min-height: 6.5rem;
+    }
+}
+</style>
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4">
+    <div class="container">
+        <nav class="timeline__nav fixed" style="top: 160px;">
+            <ul>
+
+                {% for k in releases.keys %}
+                <li {% if forloop.first %}class="active"{% endif %} ><span>{{ k }}</span></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <section class="timeline__section">
+            <div class="wrapper">
+                {% for k, v in releases.items %}
+                <h2 class="milestone mb-2">{{ k }}</h2>
+                <div class="row">
+                    {% for item in v %}
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <a href="{{ item.url }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <strong>{{ item.date  }}</strong>    
+                                <p class="relbody">{{ item.title }}</p>
+
+                                <button class="btn btn-primary btn-sm btn-long">View</button>
+                            </div>
+                            
+                        </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        
+    </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(() => {
+    let stickyTop = 0,
+        scrollTarget = false
+    
+    let timeline = $('.timeline__nav'),
+        items = $('li', timeline),
+        milestones = $('.timeline__section .milestone'),
+        offsetTop = parseInt(timeline.css('top'))
+
+    const TIMELINE_VALUES = {
+        start: 300,
+        step: 150
+    }
+
+    $(window).resize(function () {
+        timeline.removeClass('fixed')
+        stickyTop = timeline.offset().top - offsetTop
+        $(window).trigger('scroll')
+    }).trigger('resize')
+
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > stickyTop) {
+            timeline.addClass('fixed')
+        } else {
+            timeline.removeClass('fixed')
+        }
+    }).trigger('scroll')
+
+    items.find('span').click(function () {
+        let li = $(this).parent(),
+            index = li.index(),
+            milestone = milestones.eq(index)
+
+        if (! li.hasClass('active') && milestone.length) {
+            scrollTarget = index
+
+            let scrollTargetTop = milestone.offset().top - 80
+
+            $('html, body').animate({ scrollTop: scrollTargetTop }, {
+                duration: 400,
+                complete: function complete() {
+                    scrollTarget = false
+                }
+            })
+        }
+    })
+
+    $(window).scroll(function () {
+        cheight = $(window).scrollTop()
+        let viewLine = cheight + $(window).height() / 3,
+            active = -1
+
+        if (scrollTarget === false) {
+            milestones.each(function () {
+                if ($(this).offset().top - viewLine > 0) {
+                    return false
+                }
+                
+                active++
+            })
+        } else {
+            active = scrollTarget
+        }
+
+        timeline.css('top', -1 * active * TIMELINE_VALUES.step + TIMELINE_VALUES.start + 'px')
+
+        items.filter('.active').removeClass('active')
+        
+        items.eq(active != -1 ? active : 0).addClass('active')
+
+        console.log($(window).scrollTop())
+        console.log('scroll')
+    }).trigger('scroll')
+})
+</script>
+{% endblock extra_js %}

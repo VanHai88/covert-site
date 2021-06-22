@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load i18n widget_tweaks %}
+{% load account %}
+{% load staticfiles %}
+
+{% block css %}
+<style>
+input#id_remember {
+  margin-top: 11px;
+}
+</style>
+{% endblock css %}
+
+{% block cont-css %}home-cont{% endblock cont-css %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="row">
+          <div class="col-md-12">
+            <h4 style="color: white;">Consent Management</h4>
+          </div>
+        </div>
+    <div class="portlet light">
+      {% include "messages.html" %}
+      <div class="row">
+        <div class="col-md-12">
+          <h1>We are currently performing a major scheduled system upgrade. The system will be in maintenance mode from 14th January 2017, 9am till 15th January 2017, Midnight (Singapore Time, GMT +8). We apologize for any inconvenience caused and thank you for your kind understanding.</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content%}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0.45)
+        ), url('{% static "images/research.jpg" %}');
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-sm-12">
+                
+                <table class="table" id="resTable">
+                    <thead>
+                        <th >Name</th>
+                        <th >Description</th>
+                        <th >Published</th>
+                        <th style="width: 10%" >Views</th>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        {% with item=item.specific  %}
+                            <tr>
+                            <td><a class="otext" href="{% pageurl item %}">{{ item.name }}</a></td>
+                            <td>{{ item.description|richtext }}</td>
+                            
+                            <td>{{ item.first_published_at.date|date:"Y-m-d" }}</td>
+                            <td>{{ item.view_count }}</td>
+                            
+                            </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#resTable').DataTable({
+        responsive: true,
+        order: [[ 2, "desc" ]]
+    });
+} );
+</script>
+{% endblock extra_js %}

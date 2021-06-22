@@ -1,0 +1,62 @@
+<canvas id="userChart"></canvas>
+
+
+<script>
+var config = {
+  type: 'bar',
+  data: {
+    labels: {{ labels|safe }},
+    datasets: [
+    {% for k, v in country_dict.items %}
+    {
+      type: 'bar',
+      label: '{{ k }}',
+      backgroundColor: "{{ v.color }}",
+      data: {{ v.values }},
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    ]
+  },
+  options: {
+    tooltips: {
+            mode: 'label',
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var range = data.datasets[tooltipItem.datasetIndex].label;
+                    var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    var total = 0;
+                    for (var i = 0; i < data.datasets.length; i++)
+                        total += data.datasets[i].data[tooltipItem.index];
+                    if (tooltipItem.datasetIndex != data.datasets.length - 1) {
+                        if (valor != 0) {
+                            return range + " : " + valor;    
+                        } else {
+                            return '';    
+                        }
+                        
+                    } else {
+                        if (valor != 0) {
+
+                            return [range + " : " + valor, "Total : " + total];
+                        } else {
+                            return ["Total : " + total];
+                        }
+                    }
+                }
+            }
+        },
+
+    scales: {
+      xAxes: [{
+        stacked: true
+      }],
+      yAxes: [{
+        stacked: true
+      }]
+    }
+  }
+};
+
+var ctx = document.getElementById("userChart").getContext("2d");
+new Chart(ctx, config);
+</script>

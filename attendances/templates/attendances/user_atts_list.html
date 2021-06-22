@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+{% load crispy_forms_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+.thumbnail {
+    position: relative;
+}
+
+.caption:hover {
+  color: #fd7e14;
+}
+.caption {
+    font-size:40px;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    width: 100%;
+}
+
+.courseList img{
+   width: 150px;
+}
+
+.courseList li {
+    float: left;
+}
+
+.courseList .disabled {
+    opacity: .5;
+    filter: grayscale(100%);
+}
+
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1> {% blocktrans %}{{username}}'s Attendanc{% endblocktrans %}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <a class="btn btn-primary" href="{% url 'users-courses' %}"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</a>
+                <hr />
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                <table class="table" id="artTable">
+                    <thead>
+                        <th>Title</th>
+                        <th>Attendance Email</th>
+                    </thead>
+                    <tbody>
+                        {% for form in formset %}
+                            {{ form }}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

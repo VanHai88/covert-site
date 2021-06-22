@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% load url_tags %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0.45)
+        ), url('{% static "images/research.jpg" %}');
+}
+.embed-responsive {
+    height: 750px !important;
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-md-7">
+
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"  src="/static/ViewerJS/index.html#{{ page.pdf.url }}" allowfullscreen webkitallowfullscreen height="600"></iframe>
+
+                        {% if user.is_authenticated %}
+                        <iframe class="embed-responsive-item"  src="/static/ViewerJS/index.html#{{ page.pdf.url }}" allowfullscreen webkitallowfullscreen height="600"></iframe>
+                        {% else %}
+                        <iframe class="embed-responsive-item"  src="/static/ViewerJS/guest.html#{{ page.pdf.url }}" allowfullscreen webkitallowfullscreen height="600"></iframe>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                            <div class="getsocial gs-inline-group"></div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    {% include "coral_div.html" %}
+                </div>
+            </div>
+      </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+{% if not request.is_preview %}
+{% include "coral.html" with obj=page ident="RES" %}
+{% else %}
+{% endif %}
+
+<script>
+let showError = true
+function onError() {
+    if (showError) {
+        toastr.info('Preview ended! Sign up or Login to continue reading the rest of the document.');
+    }
+    showError=false
+}
+</script>
+{% endblock extra_js %}

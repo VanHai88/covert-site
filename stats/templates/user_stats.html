@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.65)
+        ), url('{% static "images/news.jpg" %}');
+
+}
+
+#artTable td{
+    vertical-align: middle;
+}
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>Site Sats</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        
+        <hr class="mb-2">
+        <form id="eventForm">
+        <div class="row vcenter">
+            <div class="col-6 col-md-3 mt-2">
+                <input type="text" class="form-control dateRange" placeholder="Enter Date Range" value="{{ span }}">
+            </div>
+            <div class="col-md-1 text-center">
+                ||
+            </div>
+            <div class="col-md-2">
+                <select class="form-control yearFilter fixedFilter" name="" id="">
+                    <option value="">Select Year</option>
+                    {% for y in ylist %}
+                        <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control spanFilter fixedFilter" name="" id="">
+                    <option value="month">By Month</option>
+                    <option value="week">By Fortnight</option>
+                </select>
+            </div>
+        </div>
+        </form>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="ucDiv"></div>
+            </div>   
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.dateRange').daterangepicker({
+        "locale": {
+            "format": "YYYY-MM-DD",
+        },
+    });
+
+    $('.fixedFilter').change(function(){
+        var year = $('.yearFilter').val();
+        var span = $('.spanFilter').val();
+
+        if (year != '') {
+            $.ajax({
+                url: "{% url 'ajax-user-stats' %}",
+                type: "POST",
+                data: {
+                    'year': year,
+                    'span': span,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                success: function(data) {
+                    $('#ucDiv').html(data)
+                }
+            });    
+        } else {
+            toastr.warning('Filters not set. Using date range!')
+            $('.dateRange').trigger('change');
+        }
+    });
+
+    $('.dateRange').change(function() {
+        var range = $(this).val();
+
+        $.ajax({
+            url: "{% url 'ajax-user-stats' %}",
+            type: "POST",
+            data: {
+                'range': range,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function(data) {
+                $('#ucDiv').html(data)
+            }
+        });
+    });
+
+    $('.dateRange').trigger('change');
+});
+</script>
+{% endblock extra_js %}

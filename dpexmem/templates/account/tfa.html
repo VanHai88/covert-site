@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% load i18n widget_tweaks %}
+{% load account %}
+{% load staticfiles %}
+
+{% block css %}
+<style>
+input#id_remember {
+  margin-top: 11px;
+}
+</style>
+{% endblock css %}
+
+{% block cont-css %}home-cont{% endblock cont-css %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="row">
+          <div class="col-md-12">
+            <h4 style="color: white;">Consent Management</h4>
+          </div>
+        </div>
+    <div class="portlet light">
+      {% include "messages.html" %}
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Sign In</h1>
+        </div>
+      </div>
+  <div class="row login-error" style="display: none;">
+    <div class="col-md-12 margin-top-10">
+        <div class="alert alert-danger">Email / Password is invalid</div>
+    </div>
+  </div>
+      {% if form.non_field_errors %}
+  {% for e in form.non_field_errors %}
+  <div class="row">
+
+    <div class="col-md-12 margin-top-10">
+      <div class="alert alert-danger">{{ e }}</div>
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}
+      <form class="login form-horizontal" method="POST" action="{% url 'user-login' %}" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="device_hash" id="id_device_hash" class="device-hash">
+
+        {% for field in form %}
+        {% if field.errors %}
+        <div class="form-group has-error">
+          <label class="col-sm-3 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+          <div class="col-sm-9">
+            {% if field.name != 'remember' %}
+              {{ field|attr:"class:form-control" }}
+            {% else %}
+              {{ field }}
+            {% endif %}
+            <span class="help-block">
+              {% for error in  field.errors %}{{ error }}{% endfor %}
+            </span>
+          </div>
+        </div>
+        {% else %}
+        <div class="form-group">
+          <label class="col-sm-3 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+          <div class="col-sm-9">
+            {% if field.name != 'remember' %}
+              {{ field|attr:"class:form-control" }}
+            {% else %}
+              {{ field }}
+            {% endif %}
+            
+            {% if field.help_text %}
+            <p class="help-block"><small>{{ field.help_text }}</small></p>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <div class="row margin-top-20">
+          <div class="col-md-12">
+            <a class="button secondaryAction pull-left" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+            <button class="primaryAction btn btn-primary btn-long pull-right" type="submit">{% trans "Sign In" %}</button>
+          </div>
+        </div>
+        <!--modal start -->
+        <div class="modal fade" id="tfaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">2 Factor Authentication</h4>
+              </div>
+              <div class="modal-body">
+              <div class="row tfa-error" style="display: none;">
+                <div class="col-md-12 margin-top-10">
+                    <div class="alert alert-danger">A One-Time Password has been sent to your email inbox. Please check your email inbox to retrieve the password and enter it into the field below</div>
+                </div>
+              </div>
+                <form class="tfa form-horizontal" method="POST" action="{% url 'check-tfa' %}">
+                  <div class="form-group" style:"align:center;">
+                    <div class="col-sm-1"></div>
+                    <label class="col-sm-4 control-label" for="id_tfa_code">One-Time Password</label>
+                    <div class="col-sm-5"><input class="form-control" type="text" id="id_tfa_code" name="tfa_code"></div>
+                    <div class="col-sm-2"></div>
+                  </div>
+                  <div class="checkbox" style="display: none;">
+                    <label><input type="checkbox" id="id_save_device" name="save_device" checked> Remember my device and do not ask for verification for the next <span id="id_save_on_days">0</span> days</label>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="submitTFA" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--modal end -->
+        <div class="row margin-top-20">
+        <!-- commenting the copyright in login out (William)
+          <div class="col-md-12 text-center">
+            <p>Copyright © 2014 Straits Interactive Pte Ltd</p>
+          </div>
+        -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/fingerprint2.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+  new Fingerprint2().get(function(result, components){
+    $('.device-hash').val(result);
+  });
+</script>
+<script type="text/javascript">
+  //clean login form on init
+  $('#id_login').val('');
+  $('#id_password').val('');
+  //$('input').attr('autocomplete', 'off');
+
+  //login action
+  $('.login').on('submit', function(evt){
+    evt.preventDefault();
+    var form = $(this).serialize();
+    var url = $(this).attr('action');
+    $.post(url, form, function(data){
+      if(data.status === "tfa"){
+        //open modal window
+        $('#tfaModal').modal();
+        if(data.days){
+          $('.checkbox').show();
+          $('#id_save_on_days').text(data.days); 
+        }
+        $('#submitTFA').on('click', function(evt){
+          evt.preventDefault();
+          var tfa_url = "{% url 'check-tfa' %}";
+          var full_creds = $('.login').serialize();
+          $.post(tfa_url, full_creds, function(data){
+            if(data.status === 'success'){
+              window.location = data.redirect_url;
+            }else{
+              $('.tfa-error').show();
+            }
+          });
+
+        }); 
+      }
+      if(data.status === 'success'){
+        window.location = data.redirect_url;
+      }
+      if(data.status === 'error'){
+        //$('.login-error').text(data.msg);
+        $('.login-error').show();
+        $('#id_login').val('');
+        $('#id_password').val('');
+      }
+    });
+  });
+</script>
+{% endblock content%}

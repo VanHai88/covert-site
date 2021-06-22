@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% load url_tags %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/tools.jpg" %}');
+    background-position: center center !important;
+    
+}
+
+.imgDiv {
+    background-size:contain;
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+               <h2 class="sectText">
+                   Explore Data Protection tools and websites
+               </h2>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="input-group">
+                    <input id="Search" type="text" name="search" class="form-control" value="" placeholder="Search articles">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                    </div>
+                </div>
+                
+                <div class="card mt-3" id="blogList">
+                    <div class="card-header bg-dark">
+                        <i class="fa fa-tag" aria-hidden="true"></i>&nbsp;&nbsp;Topics
+                    </div>
+                    <div class="card-body">
+                
+                        <div class="side-menu">
+                        
+                            <ul id="catList" class="side-bar-menu list-unstyled mb-0">
+                                {% for type, name in choices  %}
+                                <li data-type="{{ type }}"><a href="#"><span></span>{{ name }}</a></li>    
+                                {% endfor %}
+
+
+                            </ul>
+                            
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9" id="itemDiv"></div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var search = ''
+
+    var timer = null;
+
+    $('#Search').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            load_items()
+       }, 500)
+    });
+
+
+    $('#catList li').on('click', function(e){
+        e.preventDefault();
+        $('#catList li').removeClass('active');
+        $(this).addClass('active');
+        load_items()
+    });
+
+    var load_items = function () {
+        type = $('#catList li.active').data('type');
+        search = $('#Search').val();
+        $.ajax({
+            url: "/api/tools-resources/?format=html&search=" + search +"&type=" + type,
+            type: "GET",
+            success: function(data) {
+                $('#itemDiv').html(data)
+            }
+        });
+    }
+
+    {% if type %}
+    $('#catList li[data-type="{{ type }}"]').trigger('click');
+    {% else %}
+    $('#catList li:first').trigger('click');
+    {% endif %}
+
+    
+})
+</script>
+{% endblock extra_js %}

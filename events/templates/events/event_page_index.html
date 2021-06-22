@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.50)
+        ), url('{% static "images/events.jpeg" %}');
+    background-position: center 0 !important;
+}
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>Events in the Region</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4" id="eventSect">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+               <h2 class="sectText">
+                   We Bring Together People Across the Community</br> to Discuss, Share and Inspire Ideas of Innovation in Data Protection
+               </h2>
+            </div>
+            
+        </div>
+        <hr class="mb-2">
+        <form id="eventForm">
+        <div class="row">
+            <div class="col-6 col-md-2 mt-2">
+                <select id="year" class="form-control eventSel">
+                    <option value="">Year</option>
+                    {% for year in years  %}
+                    <option value="{{ year }}">{{ year }}</option>    
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2 mt-2">
+                <select id="month" class="form-control eventSel">
+                    <option value="">Month</option>
+                    <option value="1">Jan</option>
+                    <option value="2">Feb</option>
+                    <option value="3">Mar</option>
+                    <option value="4">Apr</option>
+                    <option value="5">May</option>
+                    <option value="6">Jun</option>
+                    <option value="7">Jul</option>
+                    <option value="8">Aug</option>
+                    <option value="9">Sep</option>
+                    <option value="10">Oct</option>
+                    <option value="11">Nov</option>
+                    <option value="12">Dec</option>
+                </select>
+            </div>
+            <div class="col-md-3 offset-md-5 mt-2">
+                <div class="input-group">
+                        <input id="eventSearch" type="text" name="search" class="form-control" value="" placeholder="Search events">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                        </div>
+                    </div>
+            </div>
+
+            
+            
+        </div>
+        </form>
+        <hr>
+        <div id="eventDiv">
+            
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var search = ''
+    var year = 0
+    var month = 0
+
+
+    var timer = null;
+
+    $('#eventSearch').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            load_events()
+       }, 500)
+    });
+
+    $('.eventSel').on('change', function(){
+        $('#blogList .list-group-item').removeClass('active');
+        $(this).addClass('active');
+        load_events()
+    });
+
+    var load_events = function () {
+        year = $('#year').val();
+        month = $('#month').val();
+        search = $('#eventSearch').val();
+        $.ajax({
+            url: "/api/events/?format=html&year=" + year + "&month=" + month + "&search=" + search,
+            type: "GET",
+            success: function(data) {
+                $('#eventDiv').html(data)
+            }
+        });
+    }
+
+    $('.eventSel:first').trigger('change');
+})
+</script>
+{% endblock extra_js %}

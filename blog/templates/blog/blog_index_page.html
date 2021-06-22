@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.65)
+        ), url('{% static "images/blog.jpg" %}');
+    background-position: right top !important;
+}
+</style>   
+{% endblock extra_css %}
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>Articles on Privacy</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-5 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+               <h2 class="sectText">
+                   Read articles and gain new knowledge on</br>Data Protection topics
+               </h2>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                
+                <div class="input-group">
+                    <input id="blogSearch" type="text" name="search" class="form-control" value="" placeholder="Search articles">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                    </div>
+                </div>
+                
+                <div class="card mt-3"  id="blogList">
+                    <div class="card-header bg-dark">
+                        <i class="fa fa-tag" aria-hidden="true"></i>&nbsp;&nbsp;Topics
+                    </div>
+                    <div class="card-body">
+                
+                        <div class="side-menu">
+                        
+                            <ul class="side-bar-menu list-unstyled mb-0">
+                            
+                                {% for cat in cats %}
+                                <li data-id="{{ cat.id }}"><a href="#"><span></span>{{ cat.name }}</a></li>
+                                {% endfor %}
+
+                            </ul>
+                            
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="blogDiv"></div>
+            </div>
+
+            
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var cat_id = '0'
+    var search = ''
+
+    var timer = null;
+
+    $('#blogSearch').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            load_blog()
+       }, 500)
+    });
+
+    $('#blogList li').on('click', function(e){
+        e.preventDefault();
+        $('#blogList li').removeClass('active');
+        $(this).addClass('active');
+        load_blog()
+    });
+
+    var load_blog = function () {
+        cat_id = $('#blogList .active').data('id');
+        search = $('#blogSearch').val();
+        $.ajax({
+            url: "/api/articles/?format=html&cat=" + cat_id + "&search=" + search,
+            type: "GET",
+            success: function(data) {
+                $('#blogDiv').html(data)
+            }
+        });
+    }
+
+    {% if catfilter %}
+    $('#blogList li[data-id="{{ catfilter }}"]').trigger('click');
+    {% else %}
+    $('#blogList li:first').trigger('click');
+    {% endif %}
+
+    $('html').on('click', '.pagination a', function(e){
+        e.preventDefault();
+        var href = $(this).attr('href');
+
+        if (href != '#') {
+            $.ajax({
+                url: href,
+                type: "GET",
+                success: function(data) {
+                    $('#blogDiv').html(data)
+                }
+            });
+        } 
+    });
+})
+</script>
+{% endblock extra_js %}

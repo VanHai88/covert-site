@@ -1,0 +1,25 @@
+{% extends "login_base.html" %}
+
+{% load i18n %}
+
+{% block ltitle %}Log Out{% endblock ltitle %}
+
+{% block econtent %}
+<section class="mt-4 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h4>{% trans 'Are you sure you want to log out?' %}</h4>
+
+                <form method="post" action="{% url 'account_logout' %}" onsubmit="localStorage.clear();">
+                    {% csrf_token %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <button class="btn btn-primary btn-long mt-4" type="submit">{% trans 'Log Out' %}&nbsp;&nbsp;<i class="fa fa-sign-out" aria-hidden="true"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

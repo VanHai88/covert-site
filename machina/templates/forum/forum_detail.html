@@ -1,0 +1,178 @@
+{% extends 'board_base.html' %}
+{% load i18n %}
+{% load mptt_tags %}
+{% load forum_tags %}
+{% load forum_conversation_tags %}
+{% load forum_permission_tags %}
+{% load forum_tracking_tags %}
+{% load staticfiles %}
+
+{% block sub_title %}{{ forum.name }}{% endblock sub_title %}
+
+{% block ctitle %}{{ forum.name }}{% endblock ctitle %}
+
+{% block forum_cont %}
+{% if forum %}
+<div class="row">
+    <div class="col-md-3">
+        <form action="" id="topicForm">
+            <input type="hidden" name="format" value="html">
+            <input type="hidden" name="forum" value="{{ forum.uuid }}">
+            <input type="hidden" name="ftags" value="[]">
+
+            
+            <div class="input-group">
+                <input id="topicSearch" type="text" name="search" class="form-control" value="" placeholder="Search topics">
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                </div>
+            </div>
+        </form>    
+        <div class="card mt-3 mb-3">
+            <div class="card-header bg-dark">
+                <i class="fa fa-hashtag"></i>&nbsp;&nbsp;Subjects
+            </div>
+            <div class="card-body">
+                {% for item in forum.tags.all  %}
+                <span class="badge badge-light ftag" id="ft-{{ item.id }}" data-tag="{{ item.id }}">{{ item.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% trans "Announcements" as announcements_title_trans %}
+        {% with topic_list_title=announcements_title_trans topics=announces hide_if_empty=True unread_topics=unread_topics %}
+        {% include "forum_conversation/topic_announce.html" %}
+        {% endwith %}
+    </div>
+    <div class="col-md-9 left-side-bar">
+        <div id="topicDiv"></div>
+        <div id="paginationDiv"></div>            
+    </div>
+    
+</div>
+{% endif %}
+{% endblock forum_cont %}
+
+{% block extra_js %}
+
+<script>
+$(document).ready(function(){
+
+    function setWithExpiry(key, value, ttl) {
+        const now = new Date()
+
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+    }
+
+    function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+            // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null
+        }
+
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+            // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            localStorage.removeItem(key)
+            return null
+        }
+
+        return item.value
+    }
+
+    var lstags = getWithExpiry("tags{{ forum.uuid }}")
+
+    if (lstags != null) {
+        tags = JSON.parse(lstags);
+    } else {
+        tags = []
+    }
+
+    var search = getWithExpiry("search{{ forum.uuid }}")
+
+    $('input[name="search"]').val(search)
+    
+    var load_topics = function(){
+        $.ajax({
+            url: "/api/topics/",
+            type: "GET",
+            data: $('#topicForm').serialize(),
+            success: function(data) {
+                $('#topicDiv').html(data)
+
+                var d = document, s = d.createElement('script');
+                s.src = 'https://comments.genexist.com/assets/js/count.js';
+                s.async = false;
+                s.defer = true;
+                (d.head || d.body).appendChild(s);
+            }
+        });
+    }
+
+    var timer = null;
+
+    $('#topicSearch').keyup(function(){
+       clearTimeout(timer); 
+       timer = setTimeout(function() {
+            setWithExpiry("search{{ forum.uuid }}", $('#topicSearch').val(), 3600000);
+            load_topics()
+       }, 500)
+    });
+
+
+
+    $('.ftag').on('click', function(){
+        tag = $(this).data('tag')
+        if (tags.indexOf(tag) == -1) {
+            tags.push(tag)
+        } else {
+            var idx = tags.indexOf(tag);
+            tags.splice(idx, 1);
+        }   
+
+        tags_string = JSON.stringify(tags)
+        setWithExpiry("tags{{ forum.uuid }}", tags_string, 3600000);
+
+        $(this).toggleClass('badge-light');
+        $(this).toggleClass('badge-warning');
+        $('input[name="ftags"]').val(tags_string)
+        load_topics()
+    });
+
+    if (tags.length > 0) {
+        $.each(tags, function(i, v) {
+            $('#ft-' + v).toggleClass('badge-light');
+            $('#ft-' + v).toggleClass('badge-warning');
+        })
+
+        $('input[name="ftags"]').val(lstags)
+    }
+
+    load_topics()
+    
+    $('html').on('click', '.pagination a', function(e){
+        e.preventDefault();
+        var href = $(this).attr('href');
+
+        if (href != '#') {
+            $.ajax({
+                url: href,
+                type: "GET",
+                success: function(data) {
+                    $('#topicDiv').html(data)
+                }
+            });
+        } 
+    });
+});
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,802 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load wagtailcore_tags %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/swiper@5.4.5/css/swiper.min.css">
+<style>
+.bg-banner-home{
+    background-color: white;
+    background-image: url('{{ sddict.jumbo_img.val_file.url }}');
+}
+</style>
+{% endblock extra_css %}
+
+{% block jtron_css %}bg-banner-home{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>{{ sddict.jumbo_main_title.val|safe }}</h1>
+<p>{{ sddict.jumbo_sub_title.val|safe }}</p>
+
+<button class="btn btn-primary joinBtn regBtn" data-action="norm" data-toggle="modal" data-target="#loginModal" data-enpassid="__1">{{ sddict.jumbo_cta.val }}&nbsp;&nbsp;<i class="fa fa-users"></i></button>
+{% endblock jtron %}
+
+{% block content %}
+
+
+{#   International Advisors Section Starts #}
+    <section class=" bg-international-advisors-home">
+
+        <div class="container mt-5">
+            <div class="card" style="background: #ea983e; padding: 30px;">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h1 style="color:white">
+                            How can we help you today?
+                        </h1>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <!-- Organisation's Resources -->
+                    <div class="col-md-4 offset-md-2">
+                        <div class="dropdown">
+                            <button class="btn btn-lg btn-block dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ quests.0.text }}
+                            </button>
+                            <div class="dropdown-menu">
+                                {% for ans in quests.0.answers.all %}
+                                <a class="dropdown-item" target="_blank" href="{{ ans.url }}">{{ ans.answer }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <button class="btn btn btn-lg btn-block dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ quests.1.text }}
+                            </button>
+                            <div class="dropdown-menu">
+                                {% for ans in quests.1.answers.all %}
+                                <a class="dropdown-item" target="_blank" href="{{ ans.url }}">{{ ans.answer }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{#   International Advisors Section Ends #}
+
+{#   Upcoming Calendar and In the News Section Starts #}
+    <section class="bg-upcoming-calendar-news-home">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-9">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">Organisations' Resources</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for art in org %}
+                            <div class="col-md-6 col-sm-12 mb-4">
+
+                            <a href="{{ art.url }}">
+                                <div class="artImg card" style="background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent), url('{{ art.banner.url }}');">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h4>{{ art.title|truncatechars:40 }}</h4>
+                                            <p>{{ art.body|striptags|truncatechars_html:50 }}</p>
+    
+                                            <button class="btn btn-long btn-sm btn-primary">Read More&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/articles/?cat=10">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">Events & Webinars</p>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+
+                            {% for event in events %}
+                            <div class="col-md-4 col-lg-4 mb-4">
+                                <a href="{{ event.url }}">
+                                <div class="card">
+                                    <div class="date-mark">
+                                        <div class="date-mark-text">
+                                            <p>{{ event.pdate.1 }}</p>
+                                            <p>{{ event.pdate.2 }}</p>
+                                        </div>
+                                    </div>
+
+                                    <img class="card-img-top lazy" data-src="{{ event.get_banner_thumb }}" alt="Card image cap">
+
+                                    <div class="card-body">
+                                        <h6 class="ew-title">{{ event.title }}</h6>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p class="ew-time"><i class="far fa-clock"></i> {{ event.pdate.3 }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/events/">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Individuals Learning Roadmap Starts-->
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">Individuals Learning Roadmap</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            {% for art in ind %}
+                            <div class="col-md-6 col-sm-12 mb-4">
+                                <a href="{{ art.url }}">
+                                    <div class="artImg card" style="background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent), url('{{ art.banner.url }}');">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h4>{{ art.title|truncatechars:50 }}</h4>
+                                                <p>{{ art.body|striptags|truncatechars_html:100 }}</p>
+
+                                                <button class="btn btn-long btn-sm btn-primary">Read More&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/articles/?cat=5">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <hr>
+                        
+                        <!-- Courses Starts -->
+                         <div class="row mt-4">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">Courses</p>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            {% for course in courses %}
+                            <div class="col-md-4 col-lg-4 mb-4">
+                                <a href="{{ course.url }}">
+                                <div class="card">
+                                    <div class="date-mark">
+                                        <div class="date-mark-text">
+                                            <p>{{ course.nsess.0 }}</p>
+                                            <p>{{ course.nsess.1 }}</p>
+                                        </div>
+                                    </div>
+                                    <img class="card-img-top lazy" src="{{ course.get_banner_thumb }}" alt="Card image cap">
+                                    
+                                    {% if course.countries %}
+                                    <img class="newsImg mt-2 mr-2 float-right cardFlag lazy" data-src="/static/images/flags/{{ course.bcountry.0 }}.png">  
+                                    {% endif %}
+
+                                    <div class="card-body">
+
+                                        <h6 class="ew-title">{{ course.title }}</h6>
+                                        <div class="row no-gutters">
+                                            <div class="col-4 vcenter">
+                                                <p class="ew-time "><i class="far fa-clock"></i> {{ course.nsess.3 }} Days</p>
+                                            </div>
+                                            <div class="col-8 text-right">
+                                                <p class="ew-money">{{ course.price.currency }} {{ course.price.amount }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/courses/">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- Courses Ends -->
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">Latest Updates </p>
+                            </div>
+                        </div>
+
+
+                        {% for itm in updates %}
+                        <div class="row no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.name }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{{ itm.url }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-center">
+                                <p class="black-header">In the Region</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4 mb-3">
+                            <div class="col-9 vcenter">
+                                <p class="blue-header">Singapore</p>
+                            </div>
+                            <div class="col-3">
+                                <img class="newsImg float-right lazy" data-src="{% static 'images/flags/sg.png' %}" >
+                            </div>
+                        </div>
+                        {% for itm in news.SG %}
+                        <div class="row no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.title }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{% url 'view-news' itm.uuid %}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/news/?country=SG">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-3">
+                            <div class="col-9 vcenter">
+                                <p class="blue-header">Malaysia</p>
+                            </div>
+                            <div class="col-3">
+                                <img class="newsImg float-right lazy" data-src="{% static 'images/flags/my.png' %}" >
+                            </div>
+                        </div>
+                        {% for itm in news.MY %}
+                        <div class="row mt-2 no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.title }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{% url 'view-news' itm.uuid %}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/news/?country=MY">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-3">
+                            <div class="col-9 vcenter">
+                                <p class="blue-header">Philippines</p>
+                            </div>
+                            <div class="col-3">
+                                <img class="newsImg float-right lazy" data-src="{% static 'images/flags/ph.png' %}" >
+                            </div>
+                        </div>
+                        {% for itm in news.PH %}
+                        <div class="row mt-2 no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.title }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{% url 'view-news' itm.uuid %}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/news/?country=PH">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-3">
+                            <div class="col-9 vcenter">
+                                <p class="blue-header">Indonesia</p>
+                            </div>
+                            <div class="col-3">
+                                <img class="newsImg float-right lazy" data-src="{% static 'images/flags/id.png' %}" >
+                            </div>
+                        </div>
+                        {% for itm in news.ID %}
+                        <div class="row mt-2 no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.title }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{% url 'view-news' itm.uuid %}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/news/?country=ID">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-3">
+                            <div class="col-9 vcenter">
+                                <p class="blue-header">Thailand</p>
+                            </div>
+                            <div class="col-3">
+                                <img class="newsImg float-right lazy" data-src="{% static 'images/flags/th.png' %}" >
+                            </div>
+                        </div>
+                        {% for itm in news.TH %}
+                        <div class="row mt-2 no-gutters">
+                            <div class="col-11">
+                                <h5 class="mt-0">{{ itm.title }}</h5>
+                            </div>
+                            <div class="col-1 vcenter vright">
+                                <a class="text-more" href="{% url 'view-news' itm.uuid %}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a class="text-more" href="/news/?country=TH">See More <i class="fas fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{#   Upcoming Calendar and In the News Section Ends #}
+
+{#   Latest COVID-19 Section Starts #}
+    <section class="bg-latest-articles-home">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="black-header">Our Blog</p>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <a href="{{ articles.0.url }}">
+                    <div class="artImg" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent), url('{{ articles.0.get_banner }}');"> 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>{{ articles.0.title|truncatechars:100 }}</h4>
+                                <p>{{ articles.0.body|striptags|truncatechars_html:120 }}</p>
+                                <button class="btn btn-sm btn-primary btn-long">Read More&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <!-- Covid NEWS Right Panel -->
+                <div class="col-md-4">                    
+                    <div class="media">
+                        <img class="mr-1 col-2 lazy" data-src="{% static 'images/research-reports.png' %}" >
+                        <div class="media-body">
+                            <div class="row">
+
+                                <h4 class="mt-0">{{ articles.1.title|truncatechars:50 }}</h4>
+                                <p class="mt-2 mb-0">{{ articles.1.body|striptags|truncatechars_html:100 }}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <a class="text-more" href="{{ articles.1.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>                    
+                    <hr>
+                    <div class="media">
+                        <img class="mr-1 col-2 lazy" data-src="{% static 'images/research-reports.png' %}" >
+                        <div class="media-body">
+                            <div class="row">
+
+                                <h4 class="mt-0">{{ articles.2.title|truncatechars:50 }}</h4>
+                                <p class="mt-2 mb-0">{{ articles.2.body|striptags|truncatechars_html:100 }}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <a class="text-more" href="{{ articles.2.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>      
+                </div>
+            
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <a class="text-more" href="/articles/">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="row  mt-5">
+                <div class="col-md-12 text-center">
+                    <p class="black-header">COVID-19 Resources</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <a href="{{ special.0.url }}">
+                    <div class="artImg" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent), url('{{ special.0.get_banner }}');"> 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>{{ special.0.title|truncatechars:100 }}</h4>
+                                <p>{{ special.0.body|striptags|truncatechars_html:120 }}</p>
+                                <button class="btn btn-sm btn-primary btn-long">Read More&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <!-- Covid NEWS Right Panel -->
+                <div class="col-md-4">                    
+                    <div class="media">
+                        <img class="mr-1 col-2 lazy" data-src="{% static 'images/research-reports.png' %}" >
+                        <div class="media-body">
+                            <div class="row">
+
+                                <h4 class="mt-0">{{ special.1.title|truncatechars:50 }}</h4>
+                                <p class="mt-2 mb-0">{{ special.1.body|striptags|truncatechars_html:100 }}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <a class="text-more" href="{{ special.1.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>                    
+                    <hr>
+                    <div class="media">
+                        <img class="mr-1 col-2 lazy" data-src="{% static 'images/research-reports.png' %}" >
+                        <div class="media-body">
+                            <div class="row">
+
+                                <h4 class="mt-0">{{ special.2.title|truncatechars:50 }}</h4>
+                                <p class="mt-2 mb-0">{{ special.2.body|striptags|truncatechars_html:100 }}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <a class="text-more" href="{{ special.2.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>      
+                </div>
+                <!-- Covid NEWS Right Panel Ends -->
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <a class="text-more" href="/articles/?cat=4">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+{#   Latest COVID-19 Section Ends #}
+
+
+
+{#   Featured Videos Section Starts #}
+    <section class="bg-featured-videos-home">
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="white-header">Featured Videos</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{{ videos.0.url }}">
+                        <div class="mainVideo lazy" data-src="{{ videos.0.get_banner }}">
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="row no-gutters">
+                        {% for video in videos %}
+                        {% if not forloop.first %}
+                        <div class="col-md-6">
+                            <a href="{{ video.url }}">
+                                <div class="subVideo lazy" data-src="{{ video.get_banner_thumb }}">
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <a href="/videos/" class="btn btn-primary btn-long joinBtn " >See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+{#   Featured Videos Section Ends #}
+{#   Research Reports and Tools and Websites Section Starts #}
+    <section class="bg-rr-tw-home">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p class="black-header">Research</p>
+                        </div>
+                    </div>
+
+                    
+                    {% for res in research %}
+                    <div class="media mt-4">
+                        <img class="mr-1 col-2 lazy" data-src="{% static 'images/research-reports.png' %}" >
+                        <div class="media-body">
+                            <h4 class="mt-0">{{ res.title }}</h4>
+                            <p class="mt-2">{{ res.description|striptags|truncatechars_html:80 }}</p>
+
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <a class="text-more" href="{{ res.url }}">Read More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    
+
+                    {% endfor %}
+
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p class="black-header">Tools & Resources</p>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-2">
+                        <div class="col-8">
+                            <p class="blue-header mb-0 ">Regulators</p>
+                        </div>
+                        <div class="col-4 vcenter vright">
+                            <a class="text-more" href="/resources/?type=regulators">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="swiper-container" id="screg">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    {% for res in resources.regulators %}
+                                    <div class="swiper-slide">
+                                        <a href="{{ res.url_address }}">
+                                            <img class="lazy" data-src="{{ res.get_banner }}" alt="">
+                                        </a>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+
+
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+
+                                <!-- If we need scrollbar -->
+                               
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row mt-4 mb-2">
+                        <div class="col-8">
+                            <p class="blue-header mb-0">Tools</p>
+                        </div>
+                        <div class="col-4 vcenter vright">
+                            <a class="text-more" href="/resources/?type=tools">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="swiper-container" id='sctools'>
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    {% for res in resources.tools %}
+                                    <div class="swiper-slide">
+                                        <a href="{{ res.url_address }}">
+                                            <img class="lazy" data-src="{{ res.get_banner }}" alt="">
+                                        </a>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+
+
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+
+                                <!-- If we need scrollbar -->
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-2">
+                        <div class="col-8">
+                            <p class="blue-header mb-0">Channel Partners</p>
+                        </div>
+                        <div class="col-4 vcenter vright">
+                            <a class="text-more" href="/resources/?type=partners">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="swiper-container" id="scpart">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    {% for res in resources.partners %}
+                                    <div class="swiper-slide">
+                                        <a href="{{ res.url_address }}">
+                                            <img class="lazy" data-src="{{ res.get_banner }}" alt="">
+                                        </a>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+
+
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+
+                                <!-- If we need scrollbar -->
+
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row mt-4 mb-2">
+                        <div class="col-8">
+                            <p class="blue-header mb-0 ">Accreditation Partners</p>
+                        </div>
+                        <div class="col-4 vcenter vright">
+                            <a class="text-more" href="/resources/?type=learning">See More <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row  mt-2">
+                        <div class="col-md-12">
+                            <div class="swiper-container" id="scaccred">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    {% for res in resources.learning %}
+                                    <div class="swiper-slide">
+                                        <a href="{{ res.url_address }}">
+                                            <img class="lazy" data-src="{{ res.get_banner }}" alt="">
+                                        </a>
+                                    </div>
+
+                                    {% endfor %}
+                                </div>
+
+
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+
+                                <!-- If we need scrollbar -->
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+{#   Research Reports and Tools and Websites Section Ends #}
+{#   Footer Section Starts #}
+    <div class="container-fluid bg-footer-home">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <img class="lazy" data-src="{% static 'images/footer-logo.png' %}" class="img-responsive img-footer-logo" alt="" />
+                        <p class="footer-about">The Data Protection Excellence (DPEX) Network, the first of its kind facility in the ASEAN region, aims to provide leadership, best practices, training, research and support for all things around data privacy from an operational perspective.</p>
+                        <ul class="footer-social-listing">
+                            <li><a href="https://www.facebook.com/StraitsInteractive/"><i class="fab fa-facebook-f"></i></a></li>
+                            <!--<li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>-->
+                        </ul>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img class="lazy" data-src="{% static 'images/straits.png' %}" class="img-responsive img-footer-logo" alt="" />
+                        <p class="footer-about">The DPEX Network was established by Straits Interactive, the regional leader in providing data protection / privacy and governance solutions.</br>Visit <a class="otext" href="https://www.straitsinteractive.com">our website</a> for more information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{#   Footer Section Ends #}
+{% endblock content %}
+
+{% block extra_js %}
+
+<script src="https://unpkg.com/swiper@5.4.5/js/swiper.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
+
+<script>
+$('document').ready(function() {
+    $('.lazy').Lazy();
+
+    var sconf = {
+                    slidesPerView: 4,
+                    spaceBetween: 1,
+                    loop: true,
+                    loopFillGroupWithBlank: true,
+                    freeMode: true,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    
+                    loop: true
+                }
+
+    var sctools = $('#sctools');
+    var scpart = $('#scpart');
+    var screg = $('#screg');
+    var scaccred = $('#scaccred');
+
+    new Swiper (sctools, sconf);
+    new Swiper (scpart, sconf);
+    new Swiper (screg, sconf);
+    new Swiper (scaccred, sconf);
+});
+</script>
+{% endblock extra_js %}

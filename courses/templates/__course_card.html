@@ -1,0 +1,39 @@
+<a href="{{ course.url }}">
+<div class="card courseCard">
+    <div class="blog-item-one mb-0">
+
+        <div class="date-mark">
+            <div class="date-mark-text">
+                <p>{{ course.session.0 }}</p>
+                <p>{{ course.session.1 }}</p>
+            </div>
+        </div>
+
+        <img class="card-img-top" src="{{ course.banner }}" alt="Card image cap">
+
+        {% if course.countries %}
+        <img class="newsImg mt-2 mr-2 float-right cardFlag" src="/static/images/flags/{{ course.countries.0 }}.png">  
+        {% endif %}
+        
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="card-title">{{ course.title }}</h5>
+                    <p class="card-text">{{ course.description }}</p>
+                
+                    <div class="row">
+                        <div class="col-5 vcenter">
+                            <p class="ew-time "><i class="far fa-clock oicon" aria-hidden="true"></i> {{ course.session.3 }} Days</p>
+                        </div>
+                        <div class="col-7 text-right">
+
+                            <p class="ew-money">{{ course.price.0 }} {{ course.price.1 }}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</a>

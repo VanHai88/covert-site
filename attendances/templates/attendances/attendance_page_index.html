@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block extra_css %}
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0.75)
+        ), url('{% static "images/bg/1516251.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+.thumbnail {
+    position: relative;
+}
+
+.caption:hover {
+  color: #fd7e14;
+}
+.caption {
+    font-size:40px;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    width: 100%;
+}
+</style>
+{% endblock extra_css %}
+{% block jtron_css %}ititle{% endblock jtron_css %}
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="slide-gallery">
+    <div class="container">
+        <div class="row">
+            <div class="mt-4 col-md-12 text-center">
+               <h4>
+                   My Profile
+               </h4>
+            </div>
+        </div>
+
+        <hr>
+        <div class="gallery-area">
+            <div class="row">
+              <div class="col-md-3">
+                  <div class="input-group">
+                      <input id="Search" type="text" name="search" class="form-control" value="" placeholder="Search by course">
+                      <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon1"><i class='fa fa-search'></i></span>
+                      </div>
+                  </div>
+              </div>
+                
+              <div class="col-md-9" id="itemDiv">
+                <p class="text-center">
+                    <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                </p>
+             </div>
+          </div>
+      </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    var search = ''
+
+    $('#Search').on('input',function(e){
+        load_items()
+    });
+
+    var load_items = function () {
+        search = $('#Search').val();
+        $.ajax({
+            url: "/api/attendances/?format=html&search=" + search,
+            type: "GET",
+            success: function(data) {
+                $('#itemDiv').html(data)
+            }
+        });
+    }
+
+  load_items()
+
+})
+</script>
+
+{% endblock extra_js %}

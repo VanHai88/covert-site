@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/swiper@5.4.5/css/swiper.min.css">
+<style>
+.ititle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.15), 
+          rgba(0, 0, 0, 0.55)
+        ), url('{% static "images/courses.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: fill;
+    padding: 6em 2em 2em 2em;
+}
+
+.courseBanner {
+    overflow: hidden;
+    position: relative;
+    min-height: 350px;
+}
+
+.courseBanner .mainBanner {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    right: -9999px;
+    margin: auto;
+}
+
+.courseDiv {
+    border: 1px solid rgba(0,0,0,.125);
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+
+.tpartImg  {
+    height: 85px;
+    display: block;
+    width: auto;
+}
+
+.cbadge {
+    height: 140px;
+    width: 140px;
+    background-color: rgba(0,0,0, 0.5);
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    z-index: 9;
+}
+
+.cbadge img{
+    width: 120px;
+    margin: 10px 10px;
+}
+
+.swiper-slide {
+    display: block;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    background: white;
+}
+
+.swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after, .swiper-button-next:after, .swiper-container-rtl .swiper-button-prev:after {
+    color: grey;
+}
+
+</style>
+{% endblock extra_css %}
+
+
+{% block jtron_css %}ititle{% endblock jtron_css %}
+
+
+
+{% block jtron %}
+<h1>{{ page.title }}</h1>
+{% endblock jtron %}
+
+{% block content %}
+<section class="mt-4 mb-4">
+    <div class="container">
+        <div class="row no-gutters courseDiv mb-3">
+            <div class="col-md-6 col-sm-12 courseBanner">
+                <div class="cbadge">
+                    <img src="{{ page.get_badge }}">    
+                </div>
+                <img class="mainBanner" src="{{ page.get_banner }}">
+            </div>
+            <div class="col-md-6 p-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="mt-2 mb-0">{{ page.title }}</h3>
+                    </div>
+                </div>
+                <hr class='mt-0'>
+                <div class="row mt-4">
+                    <div class="col-md-6 ">
+                        <h5>Training Partners</h5>
+                        {% for partner in partners %}
+                        <img class="tpartImg {% if not forloop.first %}mt-2{% endif %}" src="{{ partner.partner.get_logo }}" alt="">
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if ctype == 'fixed' %}
+                        <h5>Next Session</h5>
+                        <p class="mb-2"> {% for x in sessions.0 %}{{ x|date:"d M " }}{% if not forloop.last %}&nbsp;&nbsp;-&nbsp;&nbsp;{% endif %}{% endfor %}</p>
+                        <h5>Duration</h5>
+                        <p class="mb-2">{{ sessions.0|length }} days</p>
+                        {% else %}
+                        <h5>Course Type</h5>
+                        <p class="mb-2">Self-service sign up at partner website</p>
+                        {% endif %}
+                        <h5>Cost</h5>
+                        <p class="mb-0">{{ page.price.currency }} {{ page.price.amount }} </p>
+                    </div>
+                </div>
+                <hr class="mb-0">
+                <div class="row vcenter">
+                    <div class="col-md-6 mt-4 text-center">
+                        <div class="getsocial gs-inline-group"></div>
+                    </div>
+                    <div class="col-md-6 mt-4 text-center ">
+                        {% if request.user.is_authenticated %}
+                        <a href="{{ page.signup }}" class="mt-4 btn btn-primary btn-block"><i class="fa fa-user-plus"></i>&nbsp;&nbsp;REGISTER</a>
+
+                        {% else %}
+                        <button data-toggle="modal" data-action="register" data-target="#loginModal" class=" btn btn-sm btn-primary btn-block regBtn"><i class="fa fa-user-plus"></i>&nbsp;&nbsp;REGISTER</button>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        {% include_block page.body %}
+
+    </div>
+</section>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/swiper@5.4.5/js/swiper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clndr/1.5.1/clndr.min.js"></script>
+<script>
+var clndr = {};
+
+clndrTemplate =
+    "<div class='clndr-controls'>" +
+        "<div class='row'>"+
+            "<div class='clndr-control-button col-3'>" +
+                "<span class='clndr-previous-button' style='cursor: pointer'><i class='fas fa-chevron-left'></i></span>" +
+            '</div>' +
+            "<div class='month text-center col-6'><%= month %> <%= year %></div>" +
+            "<div class='clndr-control-button rightalign col-3 text-right'>" +
+                "<span class='clndr-next-button' style='cursor: pointer'><i class='fas fa-chevron-right'></i></span>" +
+            '</div>' +
+        "</div>"+
+    '</div>' +
+    "<table class='table mt-2 mb-0' border='0' cellspacing='0' cellpadding='0'>" +
+        '<thead class="thead-light">' +
+            "<tr class='header-days'>" +
+            '<% for(var i = 0; i < daysOfTheWeek.length; i++) { %>' +
+                "<th class='header-day'><%= daysOfTheWeek[i] %></th>" +
+            '<% } %>' +
+            '</tr>' +
+        '</thead>' +
+        '<tbody cla>' +
+        '<% for(var i = 0; i < numberOfRows; i++){ %>' +
+            '<tr>' +
+            '<% for(var j = 0; j < 7; j++){ %>' +
+            '<% var d = j + i * 7; %>' +
+                "<td class='<%= days[d].classes %>'>" +
+                    "<div class='day-contents'><%= days[d].day %></div>" +
+                '</td>' +
+            '<% } %>' +
+            '</tr>' +
+        '<% } %>' +
+        '</tbody>' +
+    '</table>';
+
+var listEvents = [
+    {% for list in sessions %}
+    {% for date in list %}
+    {
+        title: 'Session',
+        date: '{{ date|date:"Y-m-d" }}',
+    }    
+    {% if not forloop.last %},{% endif %}
+    {% endfor %}
+    {% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+$(function() {
+ $('#calendar').clndr({
+    template: clndrTemplate,
+    daysOfTheWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    classes: {
+        past: "past",
+        today: "today text-danger",
+        event: "event bg-warning",
+        selected: "selected",
+        inactive: "inactive",
+        lastMonth: "last-month text-secondary",
+        nextMonth: "next-month text-secondary",
+        adjacentMonth: "adjacent-month",
+    },
+    startWithMonth: '{{ sessions.0.0|date:"Y-m-d" }}',
+    events: listEvents,
+    multiDayEvents: {
+        endDate: 'end',
+        singleDay: 'date',
+        startDate: 'start'
+    }
+ });
+
+ var swipeCont = $('.swiper-container');
+
+                new Swiper (swipeCont, {
+                    slidesPerView: 1,
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                    },
+
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    
+                    loop: true
+                })
+});
+</script>
+{% endblock extra_js %}

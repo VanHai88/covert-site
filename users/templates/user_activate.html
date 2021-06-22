@@ -1,0 +1,23 @@
+{% extends "login_base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block ltitle %}Account Activation{% endblock ltitle %}
+
+{% block econtent %}
+
+            <div class="text-center">
+            <h4>Thank you for confirming your email.</h4>
+
+            <h4>Your account has been activated and you can now access</br> 
+            our data protection resources and discussions on pertinent topics.</br>
+            We hope you find these useful in your duties</br> 
+            as a data protection officer and professional.</h5>
+                {% if not request.user.is_authenticated %}
+                
+                    <button data-toggle="modal" data-target="#loginModal" class="btn btn-primary btn-long mt-4 text-center"><i class="fa fa-user"></i>&nbsp;&nbsp;Login</button>
+                {% endif %}
+            
+        
+            </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block extra_css %}
+<style>
+.atitle {
+    background: linear-gradient(
+          rgba(0, 0, 0, 0.4), 
+          rgba(0, 0, 0, 0.4)
+        ), url('{% static "images/account.jpg" %}');
+    background-repeat: no-repeat;
+    background-position: 40% 40%;
+    background-size: cover;
+    padding: 7.5em 2em 3.5em 2em;
+}
+{% block page_css %}
+{% endblock page_css %}
+</style> 
+{% endblock extra_css %}
+
+{% block jtron_css %}atitle{% endblock jtron_css %}
+
+{% block jtron %}
+<h1>{% block ltitle %}{% endblock ltitle %}</h1>
+{% endblock jtron %}
+
+
+
+
+{% block content %}
+<section class="mt-4 sectHeight">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                {% block econtent %}
+                {% endblock econtent %}            
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
